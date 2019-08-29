@@ -38,6 +38,10 @@ app.put('/updateSupplier',(req,res)=>{
     DB.updateSupplier(req,res,db);
 });
 
+app.delete('/deleteSupplier',(req,res)=>{
+    DB.deleteSupplier(req,res,db);
+});
+
 exports.supplier = functions.https.onRequest(app);
 
 // exports.registerSupplier = functions.https.onRequest((req,res)=>{

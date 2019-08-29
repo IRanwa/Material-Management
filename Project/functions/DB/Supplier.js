@@ -118,3 +118,25 @@ exports.updateSupplier = function(req,res,db){
     });
 }
 
+//Delete Specific Supplier
+exports.deleteSupplier = function(req,res,db){
+    const query = req.query;
+    db.collection("Suppliers").doc(query.supplierId).get()
+    .then(docList=>{
+        return docList;
+    }).then(doc=>{
+        if(doc.data()===null){
+            console.log("Supplier delete un-successful!");
+            res.status(500).send(JSON.stringify({message:"Supplier delete un-successful!"}));
+        }else{
+            db.collection("Suppliers").doc(query.supplierId).delete();
+            console.log("Supplier delete successful!");
+            res.status(200).send(JSON.stringify({message:"Supplier delete successful!"}));
+        }
+        return null;
+    }).catch(error=>{
+        console.log(error);
+        res.status(500).send(JSON.stringify({message:"Supplier details searching error!"}));
+    })
+}
+
