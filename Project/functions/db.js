@@ -32,4 +32,12 @@ exports.newRawMaterial = function(req,res,db){
 exports.getRawMaterialList = function(req,res,db){
     RawMaterial.getRawMaterialList(req,res,db);
 }
+
+exports.getRawMaterial = function(req,res,db){
+    RawMaterial.getRawMaterial(req,res,db);
+}
+
+exports.updateRawMaterial = function(req,res,db){
+    RawMaterial.updateRawMaterial(req,res,db);
+}
 //Raw Material DB [End]

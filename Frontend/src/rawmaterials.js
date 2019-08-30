@@ -204,22 +204,21 @@ class PopupWindow extends Component{
                 id:this.props.id
             })
             if(this.state.windowStatus==="update"){
-                // axios.get(BASE_URL+"/supplier/getSupplier?supplierId="+this.props.id)
-                // .then(function(res){
-                //     const data = res.data;
-                //     data.conpass = data.pass;
-                //     that.setState({
-                //         fields:data
-                //     })
-                // }).catch(function(error){
-                //     console.log(error.response);
-                //     if(error.response.data!==undefined){
-                //         alert(error.response.data.message);
-                //     }else{
-                //         alert("Supplier details retrieve error!");
-                //     }
+                axios.get(BASE_URL+"/rawmaterials/getRawMaterial?raw_material_id="+this.props.id)
+                .then(function(res){
+                    const data = res.data;
+                    that.setState({
+                        fields:data
+                    })
+                }).catch(function(error){
+                    console.log(error.response);
+                    if(error.response.data!==undefined){
+                        alert(error.response.data.message);
+                    }else{
+                        alert("Raw Material details retrieve error!");
+                    }
                     
-                // })
+                })
             }
         }
     }
@@ -253,6 +252,7 @@ class PopupWindow extends Component{
                 .then(function(res){
                     console.log(res);
                     alert(res.data.message);
+                    window.location.reload();
                 }).catch(function(error){
                     console.log(error);
                     if(error.response.data!==null){
@@ -262,14 +262,15 @@ class PopupWindow extends Component{
                     }
                 });
             }else{
-                // axios.put(BASE_URL+"/supplier/updateSupplier?supplierId="+this.state.id,this.state.fields)
-                // .then(function(res){
-                //     console.log(res);
-                //     alert(res.data.message);
-                // }).catch(function(error){
-                //     console.log(error.response);
-                //     alert(error.response.data.message);
-                // })
+                axios.put(BASE_URL+"/rawmaterials/updateRawMaterial?raw_material_id="+this.state.id,this.state.fields)
+                .then(function(res){
+                    console.log(res);
+                    alert(res.data.message);
+                    window.location.reload();
+                }).catch(function(error){
+                    console.log(error.response);
+                    alert(error.response.data.message);
+                })
             }
             
         }

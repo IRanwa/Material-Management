@@ -45,17 +45,13 @@ rawmaterials.get('/getRawMaterialList',(req,res)=>{
     DB.getRawMaterialList(req,res,db);
 });
 
+rawmaterials.get('/getRawMaterial',(req,res)=>{
+    DB.getRawMaterial(req,res,db);
+});
+
+rawmaterials.put('/updateRawMaterial',(req,res)=>{
+    DB.updateRawMaterial(req,res,db);
+})
+
 exports.supplier = functions.https.onRequest(supplier);
 exports.rawmaterials = functions.https.onRequest(rawmaterials);
-
-// exports.registerSupplier = functions.https.onRequest((req,res)=>{
-//     db.registerSupplier(req,res);
-// });
-
-// exports.viewAllSuppliers = functions.https.onRequest((req,res)=>{
-//     db.viewAllSuppliers(req,res);
-// });
-
-// exports.userLogin = functions.https.onRequest((req,res)=>{
-//     jwt.generateToken(req,res);
-// });

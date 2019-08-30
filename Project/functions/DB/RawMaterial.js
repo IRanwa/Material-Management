@@ -49,5 +49,44 @@ exports.getRawMaterialList = function(req,res,db){
 
 //Get Specific Raw Material
 exports.getRawMaterial = function(req,res,db){
-    
+    const query = req.query;
+    db.collection("Raw Materials").doc(query.raw_material_id).get()
+    .then(docSnapshot=>{
+        //If data undefined it means document not found or else return information
+        if(docSnapshot.data()===undefined){
+            console.log("Raw material not found!");
+            res.status(404).send(JSON.stringify({message:"Raw material not found!"}));
+        }else{
+            console.log("Raw material search successful!");
+            res.status(200).send(JSON.stringify(docSnapshot.data()));
+        }
+        return null;
+    }).catch(error=>{
+        console.log(error);
+        console.log("Raw material search error!");
+        res.status(500).send(JSON.stringify({message:"Raw material search error!"}));
+    })
+}
+
+//Update Raw Material
+exports.updateRawMaterial = function(req,res,db){
+    const query = req.query;
+    db.collection("Raw Materials").doc(query.raw_material_id).get()
+    .then(docSnapshot=>{
+        if(docSnapshot.data()===undefined){
+            console.log("Raw material not found!");
+            res.status(404).send(JSON.stringify({message:"Raw material not found!"}));
+        }else{
+            let data = req.body;
+            data.raw_material_id = docSnapshot.data().raw_material_id;
+            db.collection("Raw Materials").doc(query.raw_material_id).set(data);
+            console.log("Raw material updated successfully!");
+            res.status(200).send(JSON.stringify({message:"Raw material updated successfully!"}));
+        }
+        return null;
+    }).catch(error=>{
+        console.log(error);
+        console.log("Raw material searching error!");
+        res.status(500).send(JSON.stringify({message:"Raw material searching error!"}));
+    })
 }
