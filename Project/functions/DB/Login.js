@@ -38,32 +38,32 @@ exports.regLogin = function(res,setData,db,callback){
     });
 };
 
-exports.getLoginDetails = function(req,res,db,callback){
-    const username = req.body.username;
-    db.collection("Login").where("username","==",username).get()
-    .then(docList=>{
-        if(docList.docs.length===0){
-            console.log("Searched login details not found!");
-            res.status(500).send(JSON.stringify({message:"Searched login details not found!"}));
-            return callback(true,null);
-        }else{
-            docList.forEach(doc => {
-                console.log(callback)
-                if(callback===null){
-                    res.status(200).send(JSON.stringify(doc.data()));
-                }
+// exports.getLoginDetails = function(req,res,db,callback){
+//     const username = req.body.username;
+//     db.collection("Login").where("username","==",username).get()
+//     .then(docList=>{
+//         if(docList.docs.length===0){
+//             console.log("Searched login details not found!");
+//             res.status(500).send(JSON.stringify({message:"Searched login details not found!"}));
+//             return callback(true,null);
+//         }else{
+//             docList.forEach(doc => {
+//                 console.log(callback)
+//                 if(callback===null){
+//                     res.status(200).send(JSON.stringify(doc.data()));
+//                 }
 
-                const keys = Object.keys(doc.data());
-                keys.forEach(key=>{
-                    req.body[key] = doc.data()[key];
-                })
-                return callback(null,req.body);
-            });
-        }
-        return null;
-    }).catch(error=>{
-        console.log(error);
-        console.log("Searching login details error!");
-        res.status(500).send(JSON.stringify({message:"Searching login details error!"}));
-    })
-};
+//                 const keys = Object.keys(doc.data());
+//                 keys.forEach(key=>{
+//                     req.body[key] = doc.data()[key];
+//                 })
+//                 return callback(null,req.body);
+//             });
+//         }
+//         return null;
+//     }).catch(error=>{
+//         console.log(error);
+//         console.log("Searching login details error!");
+//         res.status(500).send(JSON.stringify({message:"Searching login details error!"}));
+//     })
+// };

@@ -1,48 +1,52 @@
 const functions = require('firebase-functions');
-
-const express = require('express');
-const cors = require('cors');
-const app = express();
-
+const DB = require('./db');
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 let db = admin.firestore();
 
+const express = require('express');
+const cors = require('cors');
+
+const supplier = express();
+const rawmaterials = express();
+
 // Automatically allow cross-origin requests
-app.use(cors({ origin: true }));
+supplier.use(cors({ origin: true }));
+rawmaterials.use(cors({origin:true}));
 
 
-const DB = require('./db');
-const jwt = require('./jwt');
-
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//  response.send("Hello from Firebase!");
-// });
-
-app.get('/getSupplierList',(req,res)=>{
+//Supplier APIs
+supplier.get('/getSupplierList',(req,res)=>{
     DB.getSupplierList(req,res,db);
 });
 
-app.get('/getSupplier',(req,res)=>{
+supplier.get('/getSupplier',(req,res)=>{
     DB.getSupplier(req,res,db);
 });
 
-app.post('/registerSupplier',(req,res)=>{
+supplier.post('/registerSupplier',(req,res)=>{
     DB.regSupplier(req,res,db);
 });
 
-app.put('/updateSupplier',(req,res)=>{
+supplier.put('/updateSupplier',(req,res)=>{
     DB.updateSupplier(req,res,db);
 });
 
-app.delete('/deleteSupplier',(req,res)=>{
+supplier.delete('/deleteSupplier',(req,res)=>{
     DB.deleteSupplier(req,res,db);
 });
 
-exports.supplier = functions.https.onRequest(app);
+//Raw Material APIs
+rawmaterials.post('/newRawMaterial',(req,res)=>{
+    DB.newRawMaterial(req,res,db);
+});
+
+rawmaterials.get('/getRawMaterialList',(req,res)=>{
+    DB.getRawMaterialList(req,res,db);
+});
+
+exports.supplier = functions.https.onRequest(supplier);
+exports.rawmaterials = functions.https.onRequest(rawmaterials);
 
 // exports.registerSupplier = functions.https.onRequest((req,res)=>{
 //     db.registerSupplier(req,res);

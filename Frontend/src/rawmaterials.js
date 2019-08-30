@@ -20,16 +20,21 @@ class RawMaterials extends Component{
 
     componentDidMount(){
         const that = this;
-        // axios.get(BASE_URL+"/supplier/getSupplierList")
-        // .then(function(res){
-        //     console.log(res);
-        //     that.setState({
-        //         tableData:res.data.suppliers
-        //     })
-        // }).catch(function(error){
-        //     console.log(error.response);
-        //     alert(error.response.data.message);
-        // });
+        axios.get(BASE_URL+"/rawmaterials/getRawMaterialList")
+        .then(function(res){
+            console.log(res);
+            that.setState({
+                tableData:res.data.rawmaterials
+            })
+        }).catch(function(error){
+            console.log(error.response);
+            if(error.response.data!==null){
+                alert(error.response.data.message);
+            }else{
+                alert("Raw material data retrieve error!");
+            }
+            
+        });
     }
 
     modalClose(){
@@ -107,7 +112,6 @@ class RawMaterials extends Component{
                         <table className="table category-table ">
                             <thead>
                                 <tr>
-                                    <th>Id</th>
                                     <th>Name</th>
                                     <th>Description</th>
                                     <th>Quantity</th>
@@ -121,15 +125,15 @@ class RawMaterials extends Component{
                                     this.state.tableData.map(data=>{
                                         console.log(data)
                                         return (
-                                            <tr key={data.rawmaterialId}>
+                                            <tr key={data.raw_material_id}>
                                                 <td>{data.name}</td>
                                                 <td>{data.description}</td>
                                                 <td>{data.quantity}</td>
                                                 <td>{data.reorderLevel}</td>
                                                 <td>{data.reorderQty}</td>
                                                 <td>
-                                                    <button className="btn btn-sm btn-update w-50 my-1 mr-1" onClick={()=>this.statusChange("update",data.rawmaterialId)}>Update</button>
-                                                    <button className="btn btn-sm btn-delete w-50 my-1 mr-1" onClick={()=>this.statusChange("delete",data.rawmaterialId)}>Delete</button>
+                                                    <button className="btn btn-sm btn-update w-50 my-1 mr-1" onClick={()=>this.statusChange("update",data.raw_material_id)}>Update</button>
+                                                    <button className="btn btn-sm btn-delete w-50 my-1 mr-1" onClick={()=>this.statusChange("delete",data.raw_material_id)}>Delete</button>
                                                 </td>
                                             </tr>
                                         );
@@ -229,8 +233,11 @@ class PopupWindow extends Component{
         let formCompleteStatus = true;
         
         fieldsKeys.forEach(key=>{
-            if(fields[key]==="" || fields[key]===0){
+            if(fields[key]===""){
                 errors[key] = "Required *";
+                formCompleteStatus = false;
+            }else if(fields[key]==="0"){
+                errors[key] = "Value must be positive *";
                 formCompleteStatus = false;
             }
         });
@@ -242,14 +249,18 @@ class PopupWindow extends Component{
             })
         }else{
             if(this.state.windowStatus==="add"){
-                // axios.post(BASE_URL+"/supplier/registerSupplier",this.state.fields)
-                // .then(function(res){
-                //     console.log(res);
-                //     alert(res.data.message);
-                // }).catch(function(error){
-                //     console.log(error.response);
-                //     alert(error.response.data.message);
-                // })
+                axios.post(BASE_URL+"/rawmaterials/newRawMaterial",this.state.fields)
+                .then(function(res){
+                    console.log(res);
+                    alert(res.data.message);
+                }).catch(function(error){
+                    console.log(error);
+                    if(error.response.data!==null){
+                        alert(error.response.data.message);
+                    }else{
+                        alert("Raw material adding error!");
+                    }
+                });
             }else{
                 // axios.put(BASE_URL+"/supplier/updateSupplier?supplierId="+this.state.id,this.state.fields)
                 // .then(function(res){
@@ -275,9 +286,9 @@ class PopupWindow extends Component{
             fields: {
                 name:"",
                 description:"",
-                quantity:0,
-                reorderLevel:0,
-                reorderQty:0
+                quantity:"",
+                reorderLevel:"",
+                reorderQty:""
             },
             errors:{
                 name:"",
