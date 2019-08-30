@@ -51,7 +51,11 @@ rawmaterials.get('/getRawMaterial',(req,res)=>{
 
 rawmaterials.put('/updateRawMaterial',(req,res)=>{
     DB.updateRawMaterial(req,res,db);
-})
+});
+
+rawmaterials.delete('/deleteRawMaterial',(req,res)=>{
+    DB.deleteRawMaterial(req,res,db);
+});
 
 exports.supplier = functions.https.onRequest(supplier);
 exports.rawmaterials = functions.https.onRequest(rawmaterials);

@@ -268,8 +268,12 @@ class PopupWindow extends Component{
                     alert(res.data.message);
                     window.location.reload();
                 }).catch(function(error){
-                    console.log(error.response);
-                    alert(error.response.data.message);
+                    console.log(error);
+                    if(error.response.data!==null){
+                        alert(error.response.data.message);
+                    }else{
+                        alert("Raw material updating error!");
+                    }
                 })
             }
             
@@ -279,7 +283,19 @@ class PopupWindow extends Component{
     }
 
     btnDelete(){
-
+        axios.delete(BASE_URL+"/rawmaterials/deleteRawMaterial?raw_material_id="+this.state.id)
+        .then(function(res){
+            console.log(res.data.message);
+            alert(res.data.message);
+            window.location.reload();
+        }).catch(function(error){
+            console.log(error);
+            if(error.response.data!==null){
+                alert(error.response.data.message);
+            }else{
+                alert("Raw material deleting error!");
+            }
+        })
     }
 
     btnReset(){
