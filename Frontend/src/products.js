@@ -20,21 +20,21 @@ class Products extends Component{
 
     componentDidMount(){
         const that = this;
-        // axios.get(BASE_URL+"/rawmaterials/getRawMaterialList")
-        // .then(function(res){
-        //     console.log(res);
-        //     that.setState({
-        //         tableData:res.data.rawmaterials
-        //     })
-        // }).catch(function(error){
-        //     console.log(error.response);
-        //     if(error.response.data!==null){
-        //         alert(error.response.data.message);
-        //     }else{
-        //         alert("Raw material data retrieve error!");
-        //     }
+        axios.get(BASE_URL+"/product/getProductsList")
+        .then(function(res){
+            console.log(res);
+            that.setState({
+                tableData:res.data.products
+            })
+        }).catch(function(error){
+            console.log(error.response);
+            if(error.response.data!==null){
+                alert(error.response.data.message);
+            }else{
+                alert("Raw material data retrieve error!");
+            }
             
-        // });
+        });
     }
 
     modalClose(){
@@ -131,6 +131,18 @@ class Products extends Component{
                                                 <td>{data.quantity}</td>
                                                 <td>{data.price}</td>
                                                 <td>
+                                                    <ul>
+                                                    {
+                                                        data.raw_material.map((raw_material,index)=>{
+                                                            return(
+                                                                <li key={index}>
+                                                                    <div>Name : {raw_material.name}</div>
+                                                                    <div>Qty : {raw_material.quantity}</div>
+                                                                </li>
+                                                            );
+                                                        })
+                                                    }
+                                                    </ul>
                                                 </td>
                                                 <td>
                                                     <button className="btn btn-sm btn-update w-50 my-1 mr-1" onClick={()=>this.statusChange("update",data.product_id)}>Update</button>
