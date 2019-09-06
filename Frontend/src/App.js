@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import Suppliers from './suppliers';
 import RawMaterials from './rawmaterials';
+import Products from './products';
 
 
 class App extends Component {
@@ -15,6 +16,7 @@ class App extends Component {
           <Route path="/homepage" component={HomePage} />
           <Route path="/suppliers" component={SuppliersPage} />
           <Route path="/rawmaterials" component={RawMaterialsPage} />
+          <Route path="/products" component={ProductsPage} />
         </div>
       </Router>
     );
@@ -112,6 +114,17 @@ class RawMaterialsPage extends Component{
       <div>
         <NavBar/>
         <RawMaterials/>
+      </div>
+    );
+  }
+}
+
+class ProductsPage extends Component{
+  render(){
+    return(
+      <div>
+        <NavBar/>
+        <Products/>
       </div>
     );
   }

@@ -1,5 +1,6 @@
 const Supplier = require("./DB/Supplier");
 const RawMaterial = require("./DB/RawMaterial");
+const Product = require("./DB/Product");
 
 
 //Supplier DB [Start]
@@ -45,3 +46,13 @@ exports.deleteRawMaterial = function(req,res,db){
     RawMaterial.deleteRawMaterial(req,res,db);
 }
 //Raw Material DB [End]
+
+//Product DB [Start]
+exports.newProduct = function(req,res,db){
+    Product.newProduct(req,res,db);
+}
+
+exports.getProductsList = function(req,res,db){
+    Product.getProductsList(req,res,db);
+}
+//Product DB [End]

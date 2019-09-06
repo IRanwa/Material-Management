@@ -1,4 +1,5 @@
 const RAW_MATERIAL_DEFAULT = 0;
+const that = this;
 
 //New Raw Material
 exports.newRawMaterial = function(req,res,db){
@@ -49,23 +50,32 @@ exports.getRawMaterialList = function(req,res,db){
 
 //Get Specific Raw Material
 exports.getRawMaterial = function(req,res,db){
-    const query = req.query;
-    db.collection("Raw Materials").doc(query.raw_material_id).get()
-    .then(docSnapshot=>{
-        //If data undefined it means document not found or else return information
-        if(docSnapshot.data()===undefined){
-            console.log("Raw material not found!");
-            res.status(404).send(JSON.stringify({message:"Raw material not found!"}));
+    const callback = function(error,result,status){
+        if(error){
+            res.status(status).send(JSON.stringify({message:result}));
         }else{
-            console.log("Raw material search successful!");
-            res.status(200).send(JSON.stringify(docSnapshot.data()));
+            res.status(status).send(JSON.stringify(result));
         }
-        return null;
-    }).catch(error=>{
-        console.log(error);
-        console.log("Raw material search error!");
-        res.status(500).send(JSON.stringify({message:"Raw material search error!"}));
-    })
+    }
+    that.getRawMaterialDetails(req,res,db,callback);
+
+    // const query = req.query;
+    // db.collection("Raw Materials").doc(query.raw_material_id).get()
+    // .then(docSnapshot=>{
+    //     //If data undefined it means document not found or else return information
+    //     if(docSnapshot.data()===undefined){
+    //         console.log("Raw material not found!");
+            
+    //     }else{
+    //         console.log("Raw material search successful!");
+    //         res.status(200).send(JSON.stringify(docSnapshot.data()));
+    //     }
+    //     return null;
+    // }).catch(error=>{
+    //     console.log(error);
+    //     console.log("Raw material search error!");
+    //     res.status(500).send(JSON.stringify({message:"Raw material search error!"}));
+    // })
 }
 
 //Update Raw Material
@@ -110,4 +120,23 @@ exports.deleteRawMaterial = function(req,res,db){
         console.log("Raw material search error!");
         res.status(500).send(JSON.stringify({message:"Raw material search error!"}));
     })
+}
+
+exports.getRawMaterialDetails = function(req,res,db,callback){
+    const query = req.query;
+    db.collection("Raw Materials").doc(query.raw_material_id).get()
+    .then(docSnapshot=>{
+        //If data undefined it means document not found or else return information
+        if(docSnapshot.data()===undefined){
+            console.log("Raw material not found!");
+            return callback(true,"Raw material not found!",404);
+        }else{
+            console.log("Raw material search successful!");
+            return callback(false,docSnapshot.data(),200);
+        }
+    }).catch(error=>{
+        console.log(error);
+        console.log("Raw material search error!");
+        return callback(true,"Raw material search error!",500);
+    });
 }

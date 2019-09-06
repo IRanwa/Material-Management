@@ -177,10 +177,7 @@ class PopupWindow extends Component{
 
 
     handleChange(field, e){
-        let fields = this.state.fields; 
-        if(field==="quantity" || field==="reorderLevel" || field==="reorderQty"){
-            
-        }
+        let fields = this.state.fields;
         fields[field] = e.target.value;        
         this.setState({fields});
         return true;

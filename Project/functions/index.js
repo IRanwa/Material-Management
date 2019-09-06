@@ -9,10 +9,12 @@ const cors = require('cors');
 
 const supplier = express();
 const rawmaterials = express();
+const product = express();
 
 // Automatically allow cross-origin requests
 supplier.use(cors({ origin: true }));
 rawmaterials.use(cors({origin:true}));
+product.use(cors({origin:true}));
 
 
 //Supplier APIs
@@ -57,5 +59,15 @@ rawmaterials.delete('/deleteRawMaterial',(req,res)=>{
     DB.deleteRawMaterial(req,res,db);
 });
 
+//Product APIs
+product.post('/newProduct',(req,res)=>{
+    DB.newProduct(req,res,db);
+});
+
+product.get('/getProductsList',(req,res)=>{
+    DB.getProductsList(req,res,db);
+});
+
 exports.supplier = functions.https.onRequest(supplier);
 exports.rawmaterials = functions.https.onRequest(rawmaterials);
+exports.product = functions.https.onRequest(product);
