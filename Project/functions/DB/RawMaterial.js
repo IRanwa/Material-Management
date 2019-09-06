@@ -89,7 +89,7 @@ exports.updateRawMaterial = function(req,res,db){
         }else{
             let data = req.body;
             data.raw_material_id = docSnapshot.data().raw_material_id;
-            db.collection("Raw Materials").doc(query.raw_material_id).set(data);
+            db.collection("Raw Materials").doc(query.raw_material_id).update(data);
             console.log("Raw material updated successfully!");
             res.status(200).send(JSON.stringify({message:"Raw material updated successfully!"}));
         }

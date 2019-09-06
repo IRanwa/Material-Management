@@ -2,6 +2,7 @@ const PRODUCT_DEFAULT = 1;
 const RawMaterial = require("./RawMaterial");
 const that = this;
 
+//Add new product
 exports.newProduct = function(req,res,db){
     console.log(req.body);
     console.log("new product start");
@@ -31,6 +32,7 @@ exports.newProduct = function(req,res,db){
     })
 };
 
+//Get List of Products
 exports.getProductsList = function(req,res,db){
     db.collection("Product").get()
     .then(docList=>{
@@ -51,7 +53,7 @@ exports.getProductsList = function(req,res,db){
                     }
                 }else{
                     if(x===0){
-                        res.status(500).send(JSON.stringify({message:"Products list retrieve error!"}));
+                        res.status(500).send(JSON.stringify({message:"Products list raw material name retrieve error!"}));
                     }
                 }
             }
@@ -66,6 +68,7 @@ exports.getProductsList = function(req,res,db){
     })
 };
 
+//Product raw materials list names retrieve
 exports.getRawMaterialName = function(raw_materials,req,res,db,returnData){
     var x = 0;
     raw_materials.forEach(raw_material=>{
@@ -88,5 +91,78 @@ exports.getRawMaterialName = function(raw_materials,req,res,db,returnData){
         RawMaterial.getRawMaterialDetails(req,res,db,callback);
     });
 };
+
+//Get specific product
+exports.getProductDetails = function(req,res,db){
+    const query = req.query;
+    db.collection("Product").doc(query.product_id).get()
+    .then(docSnapshot=>{
+        if(docSnapshot.data()===undefined){
+            console.log("Product details not found!");
+            res.status(404).send(JSON.stringify({message:"Product details not found!"}));
+        }else{
+            let product = docSnapshot.data();
+            let raw_materials = product.raw_material;
+            const callback = function(error,result){
+                if(error){
+                    console.log("Product details raw material name retrieve error!");
+                    res.status(500).send(JSON.stringify({message:"Product details raw material name retrieve error!"}));
+                }else{
+                    product.raw_material = result;
+                    console.log("Product details retrieve successful!");
+                    res.status(200).send(JSON.stringify(product));
+                }
+            }
+            that.getRawMaterialName(raw_materials,req,res,db,callback);
+        }
+        return null;
+    }).catch(error=>{
+        console.log(error);
+        console.log("Product details search error!");
+        res.status(500).send(JSON.stringify({message:"Product details search error!"}));
+    })
+};
+
+//Update specific product
+exports.updateProduct = function(req,res,db){
+    const query = req.query;
+    db.collection("Product").doc(query.product_id).get()
+    .then(docSnapshot=>{
+        if(docSnapshot.data()===undefined){
+            console.log("Product details not found!");
+            res.status(404).send(JSON.stringify({message:"Product details not found!"}));
+        }else{
+            db.collection("Product").doc(query.product_id).update(req.body);
+            console.log("Product details updated successfully!");
+            res.status(200).send(JSON.stringify({message:"Product details updated successfully!"}));
+        }
+        return null;
+    }).catch(error=>{
+        console.log(error);
+        console.log("Product details search error!");
+        res.status(500).send(JSON.stringify({message:"Product details search error!"}));
+    })
+};
+
+//Delete specific product
+exports.deleteProduct = function(req,res,db){
+    const query = req.query;
+    db.collection("Product").doc(query.product_id).get()
+    .then(docSnapshot=>{
+        if(docSnapshot.data()===undefined){
+            console.log("Product details not found!");
+            res.status(404).send(JSON.stringify({message:"Product details not found!"}));
+        }else{
+            db.collection("Product").doc(query.product_id).delete();
+            console.log("Product deleted successfully!");
+            res.status(200).send(JSON.stringify({message:"Product deleted successfully!"}));
+        }
+        return null;
+    }).catch(error=>{
+        console.log(error);
+        console.log("Product details search error!");
+        res.status(500).send(JSON.stringify({message:"Product details search error!"}));
+    })
+}
 
 

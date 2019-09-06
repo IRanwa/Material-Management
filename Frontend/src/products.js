@@ -31,7 +31,7 @@ class Products extends Component{
             if(error.response.data!==null){
                 alert(error.response.data.message);
             }else{
-                alert("Raw material data retrieve error!");
+                alert("Product data retrieve error!");
             }
             
         });
@@ -231,34 +231,34 @@ class PopupWindow extends Component{
                 id:this.props.id
             })
             if(this.state.windowStatus==="update"){
-                axios.get(BASE_URL+"/rawmaterials/getRawMaterialsList")
+                axios.get(BASE_URL+"/rawmaterials/getRawMaterialList")
                 .then(function(res){
                     that.setState({
-                        rawMaterialList:res.data
+                        rawMaterialList:res.data.rawmaterials
                     });
                 }).catch(function(error){
                     console.log(error.response);
-                    if(error.response.data!==undefined){
+                    if(error.response!==undefined){
                         alert(error.response.data.message);
                     }else{
                         alert("Raw Material details retrieve error!");
                     }
                 })
-                // axios.get(BASE_URL+"/rawmaterials/getRawMaterial?raw_material_id="+this.props.id)
-                // .then(function(res){
-                //     const data = res.data;
-                //     that.setState({
-                //         fields:data
-                //     })
-                // }).catch(function(error){
-                //     console.log(error.response);
-                //     if(error.response.data!==undefined){
-                //         alert(error.response.data.message);
-                //     }else{
-                //         alert("Raw Material details retrieve error!");
-                //     }
+                axios.get(BASE_URL+"/product/getProductDetails?product_id="+this.props.id)
+                .then(function(res){
+                    const data = res.data;
+                    that.setState({
+                        fields:data
+                    })
+                }).catch(function(error){
+                    console.log(error.response);
+                    if(error.response.data!==undefined){
+                        alert(error.response.data.message);
+                    }else{
+                        alert("Product details retrieve error!");
+                    }
                     
-                // })
+                })
             }
         }else{
             axios.get(BASE_URL+"/rawmaterials/getRawMaterialList")
@@ -324,19 +324,19 @@ class PopupWindow extends Component{
                     }
                 });
             }else{
-                // axios.put(BASE_URL+"/rawmaterials/updateRawMaterial?raw_material_id="+this.state.id,this.state.fields)
-                // .then(function(res){
-                //     console.log(res);
-                //     alert(res.data.message);
-                //     window.location.reload();
-                // }).catch(function(error){
-                //     console.log(error);
-                //     if(error.response.data!==null){
-                //         alert(error.response.data.message);
-                //     }else{
-                //         alert("Raw material updating error!");
-                //     }
-                // })
+                axios.put(BASE_URL+"/product/updateProduct?product_id="+this.state.id,this.state.fields)
+                .then(function(res){
+                    console.log(res);
+                    alert(res.data.message);
+                    window.location.reload();
+                }).catch(function(error){
+                    console.log(error);
+                    if(error.response.data!==null){
+                        alert(error.response.data.message);
+                    }else{
+                        alert("Product updating error!");
+                    }
+                })
             }
             
         }
@@ -345,19 +345,19 @@ class PopupWindow extends Component{
     }
 
     btnDelete(){
-        // axios.delete(BASE_URL+"/rawmaterials/deleteRawMaterial?raw_material_id="+this.state.id)
-        // .then(function(res){
-        //     console.log(res.data.message);
-        //     alert(res.data.message);
-        //     window.location.reload();
-        // }).catch(function(error){
-        //     console.log(error);
-        //     if(error.response.data!==null){
-        //         alert(error.response.data.message);
-        //     }else{
-        //         alert("Raw material deleting error!");
-        //     }
-        // })
+        axios.delete(BASE_URL+"/product/deleteProduct?product_id="+this.state.id)
+        .then(function(res){
+            console.log(res.data.message);
+            alert(res.data.message);
+            window.location.reload();
+        }).catch(function(error){
+            console.log(error);
+            if(error.response.data!==null){
+                alert(error.response.data.message);
+            }else{
+                alert("Product deleting error!");
+            }
+        })
     }
 
     btnReset(){

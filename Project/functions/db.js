@@ -55,4 +55,16 @@ exports.newProduct = function(req,res,db){
 exports.getProductsList = function(req,res,db){
     Product.getProductsList(req,res,db);
 }
+
+exports.getProductDetails = function(req,res,db){
+    Product.getProductDetails(req,res,db);
+}
+
+exports.updateProduct = function(req,res,db){
+    Product.updateProduct(req,res,db);
+}
+
+exports.deleteProduct = function(req,res,db){
+    Product.deleteProduct(req,res,db);
+}
 //Product DB [End]

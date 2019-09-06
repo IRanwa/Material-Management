@@ -68,6 +68,18 @@ product.get('/getProductsList',(req,res)=>{
     DB.getProductsList(req,res,db);
 });
 
+product.get('/getProductDetails',(req,res)=>{
+    DB.getProductDetails(req,res,db);
+});
+
+product.put('/updateProduct',(req,res)=>{
+    DB.updateProduct(req,res,db);
+});
+
+product.delete('/deleteProduct',(req,res)=>{
+    DB.deleteProduct(req,res,db);
+});
+
 exports.supplier = functions.https.onRequest(supplier);
 exports.rawmaterials = functions.https.onRequest(rawmaterials);
 exports.product = functions.https.onRequest(product);
