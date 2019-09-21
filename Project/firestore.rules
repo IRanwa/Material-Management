@@ -4,5 +4,11 @@ service cloud.firestore {
     match /{document=**} {
       allow read, write;
     }
+
+    match /RawMaterials/{raw_material_id}{
+      allow update: if request.resource.data.quantity>=0;
+    }
   }
+
+
 }

@@ -5,6 +5,8 @@ import './App.css';
 import Suppliers from './suppliers';
 import RawMaterials from './rawmaterials';
 import Products from './products';
+import Enquiries from './enquiries';
+import EnquiryDetails from './enquiryDetails';
 
 
 class App extends Component {
@@ -17,6 +19,8 @@ class App extends Component {
           <Route path="/suppliers" component={SuppliersPage} />
           <Route path="/rawmaterials" component={RawMaterialsPage} />
           <Route path="/products" component={ProductsPage} />
+          <Route path="/enquiries" component={EnquiriesPage} />
+          <Route path="/enquiryDetails" component={EnquiryDetailsPage} />
         </div>
       </Router>
     );
@@ -119,6 +123,40 @@ class RawMaterialsPage extends Component{
   }
 }
 
+class EnquiriesPage extends Component{
+  render(){
+    return(
+      <div>
+        <NavBar/>
+        <Enquiries/>
+      </div>
+    );
+  }
+}
+
+class EnquiryDetailsPage extends Component{
+  constructor(props){
+    super(props);
+    if(props.location.state!==undefined){
+      this.state={
+        id:props.location.state.id
+      }
+    }else{
+      this.satte={
+        id:""
+      }
+    }
+  }
+  render(){
+    return(
+      <div>
+        <NavBar/>
+        <EnquiryDetails id={this.state.id}/>
+      </div>
+    )
+  }
+}
+
 class ProductsPage extends Component{
   render(){
     return(
@@ -172,6 +210,7 @@ class NavBar extends Component{
                     <a className="nav-item nav-link" href="/products">Products</a>
                   </div>
                 </div>
+                <a className="nav-item nav-link nav-sub" href="/enquiries">Enquiries</a>
               </div>
               
              

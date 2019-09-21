@@ -8,7 +8,6 @@ exports.newProduct = function(req,res,db){
     console.log("new product start");
     db.collection("Product").orderBy("product_id","desc").limit(1).get()
     .then(docList=>{
-        console.log("new product doclist");
         let data = req.body;
         if(docList.docs.length===0){
             data.product_id = PRODUCT_DEFAULT;

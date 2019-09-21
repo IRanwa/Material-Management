@@ -3,6 +3,7 @@ const DB = require('./db');
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 let db = admin.firestore();
+let firestore = admin.firestore;
 
 const express = require('express');
 const cors = require('cors');
@@ -10,11 +11,13 @@ const cors = require('cors');
 const supplier = express();
 const rawmaterials = express();
 const product = express();
+const enquiry = express();
 
 // Automatically allow cross-origin requests
 supplier.use(cors({ origin: true }));
 rawmaterials.use(cors({origin:true}));
 product.use(cors({origin:true}));
+enquiry.use(cors({origin:true}));
 
 
 //Supplier APIs
@@ -80,6 +83,24 @@ product.delete('/deleteProduct',(req,res)=>{
     DB.deleteProduct(req,res,db);
 });
 
+//Enquiry APIs
+enquiry.post('/newEnquiry',(req,res)=>{
+    DB.newEnquiry(req,res,db);
+})
+
+enquiry.get('/getEnquiryList',(req,res)=>{
+    DB.getEnquiryList(req,res,db);
+});
+
+enquiry.get('/getEnquiry',(req,res)=>{
+    DB.getEnquiry(req,res,db);
+});
+
+enquiry.get('/reserveStocks',(req,res)=>{
+    DB.reserveStocks(req,res,db,firestore);
+});
+
 exports.supplier = functions.https.onRequest(supplier);
 exports.rawmaterials = functions.https.onRequest(rawmaterials);
 exports.product = functions.https.onRequest(product);
+exports.enquiry = functions.https.onRequest(enquiry);

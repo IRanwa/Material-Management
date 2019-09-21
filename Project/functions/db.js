@@ -1,6 +1,7 @@
 const Supplier = require("./DB/Supplier");
 const RawMaterial = require("./DB/RawMaterial");
 const Product = require("./DB/Product");
+const Enquiry = require("./DB/Enquiries");
 
 
 //Supplier DB [Start]
@@ -68,3 +69,21 @@ exports.deleteProduct = function(req,res,db){
     Product.deleteProduct(req,res,db);
 }
 //Product DB [End]
+
+//Enquiry DB [Start]
+exports.newEnquiry = function(req,res,db){
+    Enquiry.newEnquiry(req,res,db);
+}
+
+exports.getEnquiryList = function(req,res,db){
+    Enquiry.getEnquiryList(req,res,db);
+}
+
+exports.getEnquiry = function(req,res,db){
+    Enquiry.getEnquiry(req,res,db);
+}
+
+exports.reserveStocks = function(req,res,db,firestore){
+    Enquiry.reserveStocks(req,res,db,firestore);
+}
+//Enquiry DB [End]
