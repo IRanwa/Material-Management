@@ -236,17 +236,7 @@ async function updateMaterialQty(db,mainProduct,product,prodCallback,reserveStat
                         if(doc.data().quantity>=totalQty){
                             const decrement = FIRESTORE.FieldValue.increment(-totalQty);
                             T.update(docRef,{quantity:decrement});
-
-                           // let reserve_raw_materials = product.reserve_raw_materials;
-                            //console.log("reserve_raw_materials ",product.product_id," ",reserve_raw_materials);
-                            // if(reserve_raw_materials===undefined){
-                            //     reserve_raw_materials = [];
-                            // }
-                            // reserve_raw_materials.push({ id: raw_material.id, totalQty: totalQty });
                             product.status = true;
-                            //product.reserve_raw_materials = reserve_raw_materials;
-                            //delete raw_material.quantity;
-                            //raw_material.totalQty = totalQty;
                             reserve_raw_materials.push({ id: raw_material.id, totalQty: totalQty });
                         }else{
                             product.status = false;
@@ -278,9 +268,10 @@ async function updateMaterialQty(db,mainProduct,product,prodCallback,reserveStat
     });
 }
 
+//Schedule stock reserve to restock back
 function scheduleStockReserve(db,enquiry){
     const date = new Date();
-    date.setSeconds(date.getSeconds() + 15);
+    date.getMinutes(date.getMinutes() + 5);
     console.log(date);
     if(enquiry.status==="Stocks Reserved" || enquiry.status==="Stocks Not Reserved"){
         console.log(enquiry.status);
@@ -314,5 +305,43 @@ function scheduleStockReserve(db,enquiry){
         }.bind(null,db,enquiry));
     }
 }
+
+//Update enquiry to order or cancelled
+exports.updateEnquiry = function(req,res,db,firestore){
+    FIRESTORE = firestore;
+    const data = req.body;
+    db.collection("Enquiry").where("order_id","==",data.order_id).get()
+    .then(enquiryList=>{
+        
+        if(enquiryList.length===0){
+            res.status(404).send(JSON.stringify({message:"Enquiry not found!"}));
+        }else{
+            enquiryList.forEach(enquiry=>{
+                if(data.status==="Order" || data.status==="Production"){
+                    db.collection("Enquiry").doc(enquiry.data().enquiry_id.toString()).update({status:"Order"});
+                    res.status(200).send(JSON.stringify({message:"Enquiry updated successfully!"}));
+                }else if(data.status==="Cancelled"){
+                    const callback = function(error,result,status){
+                        if(error){
+                            res.status(status).send(JSON.stringify({message:result}));
+                        }else{
+                            db.collection("Enquiry").doc(enquiry.data().enquiry_id.toString()).update({status:"Cancelled"});
+                            res.status(200).send(JSON.stringify({message:"Enquiry updated successfully!"}));
+                        }
+                    }
+                    if(enquiry.data()!=="Production"){
+                        enquiryProductsList(db,enquiry.data(),callback,"ReStock");
+                    }
+                }
+            });
+        }
+        return null;
+    }).catch(error=>{
+        console.log(error);
+        res.status(500).send(JSON.stringify({message:"Enquiry search error!"}));
+    });
+}
+
+
 
 

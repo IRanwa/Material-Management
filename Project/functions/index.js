@@ -100,6 +100,10 @@ enquiry.get('/reserveStocks',(req,res)=>{
     DB.reserveStocks(req,res,db,firestore);
 });
 
+enquiry.put('/updateEnquiry',(req,res)=>{
+    DB.updateEnquiry(req,res,db,firestore);
+});
+
 exports.supplier = functions.https.onRequest(supplier);
 exports.rawmaterials = functions.https.onRequest(rawmaterials);
 exports.product = functions.https.onRequest(product);

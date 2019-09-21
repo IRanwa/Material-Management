@@ -86,4 +86,8 @@ exports.getEnquiry = function(req,res,db){
 exports.reserveStocks = function(req,res,db,firestore){
     Enquiry.reserveStocks(req,res,db,firestore);
 }
+
+exports.updateEnquiry = function(req,res,db,firestore){
+    Enquiry.updateEnquiry(req,res,db,firestore);
+}
 //Enquiry DB [End]
