@@ -165,7 +165,6 @@ async function enquiryProductsList(db, data, callback,reserveStatus) {
     let products = data.products;
     let promises = [];
     products.forEach(async prod=>{
-        
         const promise = new Promise(resolve=>{
             db.collection("Product").doc(prod.product_id.toString()).get()
             .then(async prodSnapshot=>{
@@ -177,12 +176,31 @@ async function enquiryProductsList(db, data, callback,reserveStatus) {
                     const prodCallback = function(results){
                         return resolve(results);
                     }
-                    if(reserveStatus==="Reserve" && !prod.status){
-                        updateMaterialQty(db, product, prod,prodCallback,reserveStatus);
+                    if(product.type==="Bicycle"){
+                        if(reserveStatus==="Reserve" && !prod.status){
+                            updateMaterialQty(db, product, prod,prodCallback,reserveStatus);
+                        }
+                        else if(reserveStatus==="ReStock" && prod.status){
+                            updateMaterialQty(db, product, prod,prodCallback,reserveStatus);
+                        }
+                    }else{
+                        if(reserveStatus==="Reserve" && !prod.status){
+                            if(product.quantity>=prod.quantity){
+                                const decrement = FIRESTORE.FieldValue.increment(-prod.quantity);
+                                db.collection("Product").doc(prod.product_id.toString()).update({quantity:decrement});
+                                prod.status = true;
+                            }else{
+                                prod.status = false;
+                            }
+                        }
+                        else if(reserveStatus==="ReStock" && prod.status){
+                            const increment = FIRESTORE.FieldValue.increment(prod.quantity);
+                            db.collection("Product").doc(prod.product_id.toString()).update({quantity:increment});
+                            delete prod.status;
+                        }
+                        return resolve([false,prod,200]);
                     }
-                    else if(reserveStatus==="ReStock" && prod.status){
-                        updateMaterialQty(db, product, prod,prodCallback,reserveStatus);
-                    }
+                    
                 }
                 return null;
             }).catch(error=>{
@@ -271,12 +289,15 @@ async function updateMaterialQty(db,mainProduct,product,prodCallback,reserveStat
 //Schedule stock reserve to restock back
 function scheduleStockReserve(db,enquiry){
     const date = new Date();
-    date.getMinutes(date.getMinutes() + 5);
+    date.setMinutes(date.getMinutes() + 1);
     console.log(date);
     if(enquiry.status==="Stocks Reserved" || enquiry.status==="Stocks Not Reserved"){
-        console.log(enquiry.status);
-        const job = schedule.scheduleJob(date, function(db,enquiry){
-            console.log(enquiry.enquiry_id);
+        const my_job = schedule.scheduledJobs[enquiry.enquiry_id.toString()];
+        if(my_job!==undefined){
+            my_job.cancel();
+        }
+        
+        const job = schedule.scheduleJob(enquiry.enquiry_id.toString(),date, function(db,enquiry){
             db.collection("Enquiry").doc(enquiry.enquiry_id.toString()).get()
             .then(docSnapshot=>{
                 console.log(docSnapshot);
@@ -303,6 +324,9 @@ function scheduleStockReserve(db,enquiry){
                 console.log(error);
             })
         }.bind(null,db,enquiry));
+
+        const m = schedule.scheduledJobs[enquiry.enquiry_id.toString()];
+        console.log("end my_job ",m);
     }
 }
 

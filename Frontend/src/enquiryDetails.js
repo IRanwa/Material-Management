@@ -18,13 +18,13 @@ class EnquiryDetails extends Component{
         const that = this;
         axios.get(BASE_URL+"/enquiry/getEnquiry?enquiry_id="+this.state.id)
         .then(function(res){
-            console.log(res)
+            console.log("res : ",res)
             that.setState({
                 enquiry:res.data
             })
         }).catch(function(error){
-            console.log(error);
-            if(error.response.data!==null){
+            console.log("error : ",error);
+            if(error.response!==undefined && error.response.data!==null){
                 alert(error.response.data.message);
             }else{
                 alert("Enqiry details retrieve error!");
@@ -42,7 +42,7 @@ class EnquiryDetails extends Component{
             })
         }).catch(function(error){
             console.log(error);
-            if(error.response.data!==null){
+            if(error.response!==undefined && error.response.data!==null){
                 alert(error.response.data.message);
             }else{
                 alert("Enqiry details retrieve error!");

@@ -71,8 +71,6 @@ class Products extends Component{
         }
     }
 
-
-
     render(){
         return(
             <div className="card w-90 p-3 m-5">
@@ -116,7 +114,8 @@ class Products extends Component{
                                     <th>Description</th>
                                     <th>Quantity</th>
                                     <th>Price</th>
-                                    <th>Raw Material Qty Required</th>
+                                    <th>Type</th>
+                                    {/* <th>Raw Material Qty Required</th> */}
                                     <th></th>
                                 </tr>
                             </thead>
@@ -130,7 +129,8 @@ class Products extends Component{
                                                 <td>{data.description}</td>
                                                 <td>{data.quantity}</td>
                                                 <td>{data.price}</td>
-                                                <td>
+                                                <td>{data.type}</td>
+                                                {/* <td>
                                                     <ul>
                                                     {
                                                         data.raw_material.map((raw_material,index)=>{
@@ -143,7 +143,7 @@ class Products extends Component{
                                                         })
                                                     }
                                                     </ul>
-                                                </td>
+                                                </td> */}
                                                 <td>
                                                     <button className="btn btn-sm btn-update w-50 my-1 mr-1" onClick={()=>this.statusChange("update",data.product_id)}>Update</button>
                                                     <button className="btn btn-sm btn-delete w-50 my-1 mr-1" onClick={()=>this.statusChange("delete",data.product_id)}>Delete</button>
@@ -174,6 +174,7 @@ class PopupWindow extends Component{
                 description:"",
                 quantity:"",
                 price:"",
+                type:"Bicycle",
                 raw_material:[]
             },
             raw_material:{
@@ -185,6 +186,7 @@ class PopupWindow extends Component{
                 description:"",
                 quantity:"",
                 price:"",
+                type:"",
                 raw_material:""
             }
         }
@@ -279,6 +281,7 @@ class PopupWindow extends Component{
 
     btnSubmit(){
         let fields = this.state.fields;
+        console.log(this.state.fields)
         let errors = this.state.errors;
         const fieldsKeys = Object.keys(this.state.fields);
         const errorsKeys = Object.keys(this.state.errors);
@@ -492,51 +495,64 @@ class PopupWindow extends Component{
                                         <h6>Price</h6>
                                         <input className="w-100 my-2" type="number" onChange={this.handleChange.bind(this, "price")} onKeyDown={this.keyDownClick.bind(this,"price")} ref="price" value={this.state.fields["price"]}/>
                                         <h6 className="text-danger">{this.state.errors["price"]!==""?(this.state.errors["price"]):("")}</h6>
+                                        
+                                        <h6>Type</h6>
+                                        <select value={this.state.fields["type"]} onChange={this.handleChange.bind(this, "type")}>
+                                            <option value="Bicycle">Bicycle</option>
+                                            <option value="Stock Accessory">Stock Accessory</option>
+                                        </select>
+                                        <h6 className="text-danger">{this.state.errors["type"]!==""?(this.state.errors["type"]):("")}</h6>
 
-                                        <div className="card p-3">
-                                            <h5>Raw Materials Required</h5>
-                                            <h6 className="text-danger">{this.state.errors["raw_material"]!==""?(this.state.errors["raw_material"]):("")}</h6>
-                                            <hr></hr>
-                                            <div className="row">
-                                                <div className="col">
-                                                    <h6>Raw Material</h6>
-                                                    <select className="w-100 my-2 p-1" onChange={this.handleChange.bind(this, "rawId")} value={this.state.raw_material["rawId"]}>
-                                                        <option value=""></option>
+                                        {
+                                            this.state.fields.type==="Bicycle"?(
+                                                <div className="card p-3">
+                                                    <h5>Raw Materials Required</h5>
+                                                    <h6 className="text-danger">{this.state.errors["raw_material"]!==""?(this.state.errors["raw_material"]):("")}</h6>
+                                                    <hr></hr>
+                                                    <div className="row">
+                                                        <div className="col">
+                                                            <h6>Raw Material</h6>
+                                                            <select className="w-100 my-2 p-1" onChange={this.handleChange.bind(this, "rawId")} value={this.state.raw_material["rawId"]}>
+                                                                <option value=""></option>
+                                                            {
+                                                                this.state.rawMaterialList.map((raw_material,index)=>{
+                                                                    return(
+                                                                        <option value={index} key={index}>{raw_material.name}</option>
+                                                                    );
+                                                                })
+                                                            }
+                                                            </select>
+                                                        </div>
+                                                        <div className="col">
+                                                            <h6>Quantity</h6>
+                                                            <input className="w-100 my-2" type="number" onChange={this.handleChange.bind(this, "rawQty")} onKeyDown={this.keyDownClick.bind(this,"rawQty")} ref="rawQty" value={this.state.raw_material["rawQty"]}/>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                    <div className="w-100">
+                                                            <button type="button" className="btn btn-success float-right" onClick={this.submitRawMaterial}>
+                                                                Add
+                                                            </button>
+                                                    </div>
+                                                    <hr></hr>
                                                     {
-                                                        this.state.rawMaterialList.map((raw_material,index)=>{
+                                                        this.state.fields.raw_material!==undefined && this.state.fields.raw_material.map((raw_material,index)=>{
                                                             return(
-                                                                <option value={index} key={index}>{raw_material.name}</option>
+                                                                <div key={index}>
+                                                                    <div className="row m-1">
+                                                                        <div className="col">Material Name : {raw_material.name}</div>
+                                                                        <div className="col">Required Quantity : {raw_material.quantity}</div>
+                                                                        <button className="btn-sm btn-danger" onClick={()=>this.removeRawMaterial(index)}>Remove</button>
+                                                                    </div>
+                                                                </div>
                                                             );
                                                         })
                                                     }
-                                                    </select>
                                                 </div>
-                                                <div className="col">
-                                                    <h6>Quantity</h6>
-                                                    <input className="w-100 my-2" type="number" onChange={this.handleChange.bind(this, "rawQty")} onKeyDown={this.keyDownClick.bind(this,"rawQty")} ref="rawQty" value={this.state.raw_material["rawQty"]}/>
-                                                </div>
-                                                
-                                            </div>
-                                            <div className="w-100">
-                                                    <button type="button" className="btn btn-success float-right" onClick={this.submitRawMaterial}>
-                                                        Add
-                                                    </button>
-                                            </div>
-                                            <hr></hr>
-                                            {
-                                                this.state.fields.raw_material!==undefined && this.state.fields.raw_material.map((raw_material,index)=>{
-                                                    return(
-                                                        <div key={index}>
-                                                            <div className="row m-1">
-                                                                <div className="col">Material Name : {raw_material.name}</div>
-                                                                <div className="col">Required Quantity : {raw_material.quantity}</div>
-                                                                <button className="btn-sm btn-danger" onClick={()=>this.removeRawMaterial(index)}>Remove</button>
-                                                            </div>
-                                                        </div>
-                                                    );
-                                                })
-                                            }
-                                        </div>
+                                            ):(
+                                                ""
+                                            )
+                                        }
                                         
                                         <div className="modal-footer ">
                                             <button className="btn-sm btn-success"  onClick={this.btnSubmit}>
