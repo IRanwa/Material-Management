@@ -41,6 +41,10 @@ supplier.delete('/deleteSupplier',(req,res)=>{
     DB.deleteSupplier(req,res,db);
 });
 
+supplier.post('/addStockItem',(req,res)=>{
+    DB.addStockItem(req,res,db);
+});
+
 //Raw Material APIs
 rawmaterials.post('/newRawMaterial',(req,res)=>{
     DB.newRawMaterial(req,res,db);
@@ -62,6 +66,10 @@ rawmaterials.delete('/deleteRawMaterial',(req,res)=>{
     DB.deleteRawMaterial(req,res,db);
 });
 
+rawmaterials.get('/getLowStockMaterials',(req,res)=>{
+    DB.getLowStockMaterials(req,res,db);
+});
+
 //Product APIs
 product.post('/newProduct',(req,res)=>{
     DB.newProduct(req,res,db);
@@ -81,6 +89,10 @@ product.put('/updateProduct',(req,res)=>{
 
 product.delete('/deleteProduct',(req,res)=>{
     DB.deleteProduct(req,res,db);
+});
+
+product.get('/getStockAccessoriesList',(req,res)=>{
+    DB.getStockAccessoriesList(req,res,db);
 });
 
 //Enquiry APIs

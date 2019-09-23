@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import {Redirect} from "react-router-dom";
 const axios = require("axios");
 const BASE_URL = "https://us-central1-material-management-f3b68.cloudfunctions.net";
 
@@ -12,11 +13,13 @@ class Suppliers extends Component{
             deleteStatus:false,
             updateStatus:false,
             popupId:0,
-            tableData:[]
+            tableData:[],
+            redirectToViewPage:false
         }
         this.popupSubmit = this.popupSubmit.bind(this);
         this.statusChange = this.statusChange.bind(this);
         this.modalClose = this.modalClose.bind(this);
+        this.viewDetails = this.viewDetails.bind(this);
     }
 
     componentDidMount(){
@@ -71,6 +74,13 @@ class Suppliers extends Component{
         }
     }
 
+    viewDetails(id){
+        this.setState({
+            redirectToViewPage:true,
+            popupId:id
+        });
+    }
+
 
 
     render(){
@@ -96,6 +106,11 @@ class Suppliers extends Component{
                     ):(
                         ""
                     )
+                }
+                {
+                    this.state.redirectToViewPage?(
+                        <Redirect to={{pathname:"/supplierDetails",state:{id:this.state.popupId}}}/>
+                    ):("")
                 }
                 <div className="w-100 container text-center category-menu">
                     <div className="row mt-2 text-center">
@@ -128,8 +143,10 @@ class Suppliers extends Component{
                                                 <td>{data.name}</td>
                                                 <td>{data.businessName}</td>
                                                 <td>
-                                                    <button className="btn btn-sm btn-update w-50 my-1 mr-1" onClick={()=>this.statusChange("update",data.supplierId)}>Update</button>
-                                                    <button className="btn btn-sm btn-delete w-50 my-1 mr-1" onClick={()=>this.statusChange("delete",data.supplierId)}>Delete</button>
+                                                    <input type="submit" className="btn-sm btn-success" onClick={()=>this.viewDetails(data.supplierId)} value="View Details"/>
+                                                    
+                                                    {/* <button className="btn btn-sm btn-update w-50 my-1 mr-1" onClick={()=>this.statusChange("update",data.supplierId)}>Update</button>
+                                                    <button className="btn btn-sm btn-delete w-50 my-1 mr-1" onClick={()=>this.statusChange("delete",data.supplierId)}>Delete</button> */}
                                                 </td>
                                             </tr>
                                         );

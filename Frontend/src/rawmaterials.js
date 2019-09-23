@@ -245,7 +245,10 @@ class PopupWindow extends Component{
             })
         }else{
             if(this.state.windowStatus==="add"){
-                axios.post(BASE_URL+"/rawmaterials/newRawMaterial",this.state.fields)
+                fields.quantity = parseInt(fields.quantity,10);
+                fields.reorderLevel = parseInt(fields.reorderLevel,10);
+                fields.reorderQty = parseInt(fields.reorderQty,10);
+                axios.post(BASE_URL+"/rawmaterials/newRawMaterial",fields)
                 .then(function(res){
                     console.log(res);
                     alert(res.data.message);
@@ -360,11 +363,11 @@ class PopupWindow extends Component{
                                         <h6 className="text-danger">{this.state.errors["quantity"]!==""?(this.state.errors["quantity"]):("")}</h6>
 
                                         <h6>Re-Order Level</h6>
-                                        <input className="w-100 my-2" type="text" onChange={this.handleChange.bind(this, "reorderLevel")} ref="reorderLevel" value={this.state.fields["reorderLevel"]}/>
+                                        <input className="w-100 my-2" type="number" onChange={this.handleChange.bind(this, "reorderLevel")} onKeyDown={this.keyDownClick.bind(this,"quantity")} ref="reorderLevel" value={this.state.fields["reorderLevel"]}/>
                                         <h6 className="text-danger">{this.state.errors["reorderLevel"]!==""?(this.state.errors["reorderLevel"]):("")}</h6>
 
                                         <h6>Re-Order Level Quantity</h6>
-                                        <input className="w-100 my-2" type="text" onChange={this.handleChange.bind(this, "reorderQty")} ref="reorderQty" value={this.state.fields["reorderQty"]}/>
+                                        <input className="w-100 my-2" type="number" onChange={this.handleChange.bind(this, "reorderQty")} onKeyDown={this.keyDownClick.bind(this,"quantity")} ref="reorderQty" value={this.state.fields["reorderQty"]}/>
                                         <h6 className="text-danger">{this.state.errors["reorderQty"]!==""?(this.state.errors["reorderQty"]):("")}</h6>
                                         
                                         <div className="modal-footer ">

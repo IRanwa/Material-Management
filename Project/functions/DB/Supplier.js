@@ -140,3 +140,49 @@ exports.deleteSupplier = function(req,res,db){
     })
 }
 
+//Add Stock Item
+exports.addStockItem = function(req,res,db){
+    const supplierId = req.query.supplierId;
+    db.collection("Suppliers").doc(supplierId.toString()).get()
+    .then(docSnapshot=>{
+        console.log(docSnapshot);
+        console.log(supplierId);
+        if(!docSnapshot.exists){
+            console.log("Supplier not found!");
+            res.status(404).send(JSON.stringify({message:"Supplier not found!"}));
+        }else{
+            const stock_item = req.body;
+            let data = docSnapshot.data();
+            let stockItems = data.stockItems;
+            if(stockItems===undefined){
+                db.collection("Suppliers").doc(supplierId.toString()).update({stockItems:[stock_item]});
+                res.status(200).send(JSON.stringify({message:"Supplier stock item added successfully!"}));
+            }else{
+                let available = false;
+                stockItems.forEach(item=>{
+                    if(item.type==="Raw Material"){
+                        if(item.raw_material_id===stock_item.raw_material_id){
+                            available = true;
+                        }
+                    }else{
+                        if(item.product_id===stock_item.product_id){
+                            available = true;
+                        }
+                    }
+                });
+
+                if(!available){
+                    stockItems.push(stock_item);
+                    db.collection("Suppliers").doc(supplierId.toString()).update({stockItems:stockItems});
+                    res.status(200).send(JSON.stringify({message:"Supplier stock item added successfully!"}));
+                }else{
+                    res.status(500).send(JSON.stringify({message:"Supplier stock item already exists!"}));
+                }
+            }
+        }
+        return null;
+    }).catch(error=>{
+        console.log(error);
+        res.status(500).send(JSON.stringify({message:"Supplier search error!"}));
+    })
+}

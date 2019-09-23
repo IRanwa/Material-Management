@@ -311,7 +311,9 @@ class PopupWindow extends Component{
             })
         }else{
             if(this.state.windowStatus==="add"){
-                axios.post(BASE_URL+"/product/newProduct",this.state.fields)
+                fields.price = parseFloat(fields.price);
+                fields.quantity = parseInt(fields.quantity);
+                axios.post(BASE_URL+"/product/newProduct",fields)
                 .then(function(res){
                     console.log(res);
                     alert(res.data.message);

@@ -162,6 +162,21 @@ exports.deleteProduct = function(req,res,db){
         console.log("Product details search error!");
         res.status(500).send(JSON.stringify({message:"Product details search error!"}));
     })
+};
+
+exports.getStockAccessoriesList = function(req,res,db){
+    db.collection("Product").where("type","==","Stock Accessory").get()
+    .then(docsList=>{
+        let products = [];
+        docsList.forEach(doc=>{
+            products.push(doc.data());
+        });
+        res.status(200).send(JSON.stringify({products}));
+        return null;
+    }).catch(error=>{
+        console.log(error);
+        res.status(500).send(JSON.stringify({message:"Products search error!"}));
+    });
 }
 
 

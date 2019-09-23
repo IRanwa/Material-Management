@@ -24,6 +24,10 @@ exports.updateSupplier = function(req,res,db){
 exports.deleteSupplier = function(req,res,db){
     Supplier.deleteSupplier(req,res,db);
 }
+
+exports.addStockItem = function(req,res,db){
+    Supplier.addStockItem(req,res,db);
+}
 //Supplier DB [End]
 
 //Raw Materials DB [Start]
@@ -46,6 +50,10 @@ exports.updateRawMaterial = function(req,res,db){
 exports.deleteRawMaterial = function(req,res,db){
     RawMaterial.deleteRawMaterial(req,res,db);
 }
+
+exports.getLowStockMaterials = function(req,res,db){
+    RawMaterial.getLowStockMaterials(req,res,db);
+}
 //Raw Material DB [End]
 
 //Product DB [Start]
@@ -67,6 +75,10 @@ exports.updateProduct = function(req,res,db){
 
 exports.deleteProduct = function(req,res,db){
     Product.deleteProduct(req,res,db);
+}
+
+exports.getStockAccessoriesList = function(req,res,db){
+    Product.getStockAccessoriesList(req,res,db);
 }
 //Product DB [End]
 

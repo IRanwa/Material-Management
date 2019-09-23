@@ -3,6 +3,7 @@ const that = this;
 let FIRESTORE;
 const schedule = require('node-schedule');
 
+//Create new enquiry
 exports.newEnquiry = function (req, res, db) {
     
     let data = req.body;

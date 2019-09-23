@@ -7,6 +7,8 @@ import RawMaterials from './rawmaterials';
 import Products from './products';
 import Enquiries from './enquiries';
 import EnquiryDetails from './enquiryDetails';
+import Homepage from './homepage';
+import SupplierDetails from './supplierDetails';
 
 
 class App extends Component {
@@ -17,6 +19,7 @@ class App extends Component {
           <Route exact path="/" component={Index} />
           <Route path="/homepage" component={HomePage} />
           <Route path="/suppliers" component={SuppliersPage} />
+          <Route path="/supplierDetails" component={SupplierDetailsPage} />
           <Route path="/rawmaterials" component={RawMaterialsPage} />
           <Route path="/products" component={ProductsPage} />
           <Route path="/enquiries" component={EnquiriesPage} />
@@ -95,7 +98,8 @@ class HomePage extends Component{
   render(){
     return(
       <div>
-
+        <NavBar/>
+        <Homepage/>
       </div>
     )
   }
@@ -107,6 +111,31 @@ class SuppliersPage extends Component{
       <div>
         <NavBar/>
         <Suppliers/>
+      </div>
+    )
+  }
+}
+
+class SupplierDetailsPage extends Component{
+  constructor(props){
+    super(props);
+    console.log(props.location.state)
+    if(props.location.state!==undefined){
+      this.state={
+        id:props.location.state.id
+      }
+    }else{
+      this.state={
+        id:""
+      }
+    }
+  }
+
+  render(){
+    return(
+      <div>
+        <NavBar/>
+        <SupplierDetails id={this.state.id}/>
       </div>
     )
   }
@@ -193,7 +222,7 @@ class NavBar extends Component{
     return(
       <div>
         <nav className="navbar navbar-expand-lg bg-light">
-          <a className="navbar-brand" href="/">HomePage</a>
+          <a className="navbar-brand" href="/homepage">HomePage</a>
           
           <button className="navbar-toggler" type="button" onClick={this.toggleClick} aria-controls="navbarNavAltMarkup" aria-expanded={this.state.showNav}>
             <span className="navbar-toggler-icon"></span>

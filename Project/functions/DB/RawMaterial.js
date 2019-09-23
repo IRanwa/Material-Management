@@ -122,6 +122,7 @@ exports.deleteRawMaterial = function(req,res,db){
     })
 }
 
+//Get Raw Material Details
 exports.getRawMaterialDetails = function(req,res,db,callback){
     const query = req.query;
     return new Promise(resolve=>{
@@ -141,5 +142,23 @@ exports.getRawMaterialDetails = function(req,res,db,callback){
             console.log("Raw material search error!");
             return callback(true,"Raw material search error!",500);
         });
+    });
+}
+
+exports.getLowStockMaterials = function(req,res,db){
+    db.collection("RawMaterials").get()
+    .then(docsList=>{
+        let rawmaterials = [];
+        docsList.forEach(doc=>{
+            const data = doc.data();
+            if(data.quantity < data.reorderLevel){
+                rawmaterials.push(data);
+            }
+        });
+        res.send(JSON.stringify({rawmaterials}));
+        return null;
+    }).catch(error=>{
+        console.log(error);
+        res.send(error);
     });
 }
