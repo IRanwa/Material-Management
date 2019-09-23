@@ -39,26 +39,28 @@ exports.getProductsList = function(req,res,db){
         var x = 0;
         docList.forEach(doc=>{
             let data = doc.data();
-            let raw_materials = data.raw_material;
-            const callback = function(error,result){
-                x--;
-                console.log(error);
-                console.log(result);
-                if(!error){
-                    data.raw_material = result;
-                    products.push(data);
-                    if(x===0){
-                        res.status(200).send(JSON.stringify({products}));
-                    }
-                }else{
-                    if(x===0){
-                        res.status(500).send(JSON.stringify({message:"Products list raw material name retrieve error!"}));
-                    }
-                }
-            }
-            x++;
-            that.getRawMaterialName(raw_materials,req,res,db,callback);
+            products.push(data);
+            // let raw_materials = data.raw_material;
+            // const callback = function(error,result){
+            //     x--;
+            //     console.log(error);
+            //     console.log(result);
+            //     if(!error){
+            //         data.raw_material = result;
+            //         products.push(data);
+            //         if(x===0){
+            //             res.status(200).send(JSON.stringify({products}));
+            //         }
+            //     }else{
+            //         if(x===0){
+            //             res.status(500).send(JSON.stringify({message:"Products list raw material name retrieve error!"}));
+            //         }
+            //     }
+            // }
+            // x++;
+            // that.getRawMaterialName(raw_materials,req,res,db,callback);
         });
+        res.status(200).send(JSON.stringify({products}));
         return null;
     }).catch(error=>{
         console.log(error);
@@ -101,7 +103,7 @@ exports.getProductDetails = function(req,res,db){
             res.status(404).send(JSON.stringify({message:"Product details not found!"}));
         }else{
             let product = docSnapshot.data();
-            let raw_materials = product.raw_material;
+            
             const callback = function(error,result){
                 if(error){
                     console.log("Product details raw material name retrieve error!");
@@ -112,7 +114,13 @@ exports.getProductDetails = function(req,res,db){
                     res.status(200).send(JSON.stringify(product));
                 }
             }
-            that.getRawMaterialName(raw_materials,req,res,db,callback);
+            if(product.type==="Bicycle"){
+                let raw_materials = product.raw_material;
+                that.getRawMaterialName(raw_materials,req,res,db,callback);
+            }else{
+                res.status(200).send(JSON.stringify(product));
+            }
+            
         }
         return null;
     }).catch(error=>{

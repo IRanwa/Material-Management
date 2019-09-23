@@ -80,7 +80,62 @@ exports.getSupplier = function(req,res,db){
     .then(docList=>{
         if(docList.docs.length!==0){
             docList.forEach(doc=>{
-                res.status(200).send(JSON.stringify(doc.data()));
+                let data = doc.data();
+                let stockItems = data.stockItems;
+                let count=0;
+                stockItems.forEach(async item=>{
+                    count++;
+                    if(item.type==="Raw Material"){
+                        const docRef = db.collection("RawMaterials").doc(item.raw_material_id.toString());
+                        const transaction = db.runTransaction(T=>{
+                            return T.get(docRef)
+                            .then(docSnapshot=>{
+                                if(!docSnapshot.exists){
+                                    console.log("Raw material not found!");
+                                    return null;
+                                }else{
+                                    return docSnapshot.data();
+                                }
+                            }).catch(error=>{
+                                console.log(error);
+                                console.log("Raw material search error!");
+                            })
+                        });
+                        await Promise.resolve(transaction).then(result=>{
+                            if(result!==null){
+                                item.name = result.name;
+                            }
+                            return null;
+                        });
+                    }else{
+                        const docRef = db.collection("Product").doc(item.product_id.toString());
+                        const transaction = db.runTransaction(T=>{
+                            return T.get(docRef)
+                            .then(docSnapshot=>{
+                                if(!docSnapshot.exists){
+                                    console.log("Product not found!");
+                                    return null;
+                                }else{
+                                    return docSnapshot.data();
+                                }
+                            }).catch(error=>{
+                                console.log(error);
+                                console.log("Product search error!");
+                            })
+                        });
+                        await Promise.resolve(transaction).then(result=>{
+                            if(result!==null){
+                                item.name = result.name;
+                            }
+                            return null;
+                        });
+                    }
+                    count--;
+                    if(count===0){
+                        res.status(200).send(JSON.stringify(data));
+                    }
+                });
+                
                 
             })
         }else{

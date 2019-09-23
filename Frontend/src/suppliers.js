@@ -16,7 +16,6 @@ class Suppliers extends Component{
             tableData:[],
             redirectToViewPage:false
         }
-        this.popupSubmit = this.popupSubmit.bind(this);
         this.statusChange = this.statusChange.bind(this);
         this.modalClose = this.modalClose.bind(this);
         this.viewDetails = this.viewDetails.bind(this);
@@ -49,10 +48,6 @@ class Suppliers extends Component{
               });
             }
         }
-    }
-
-    popupSubmit(){
-
     }
 
     statusChange(command,id){
@@ -95,14 +90,14 @@ class Suppliers extends Component{
                 }
                 {
                     this.state.deleteStatus?(
-                        <PopupWindow windowStatus="delete" modalClose={this.modalClose} id={this.state.popupId} popupSubmit={this.popupSubmit}/>
+                        <PopupWindow windowStatus="delete" modalClose={this.modalClose} id={this.state.popupId} />
                     ):(
                         ""
                     )
                 }
                 {
                     this.state.updateStatus?(
-                        <PopupWindow windowStatus="update" modalClose={this.modalClose} id={this.state.popupId} popupSubmit={this.popupSubmit}/>
+                        <PopupWindow windowStatus="update" modalClose={this.modalClose} id={this.state.popupId}/>
                     ):(
                         ""
                     )

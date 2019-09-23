@@ -175,7 +175,9 @@ class PopupWindow extends Component{
                 quantity:"",
                 price:"",
                 type:"Bicycle",
-                raw_material:[]
+                raw_material:[],
+                reorderLevel:"",
+                reorderQty:""
             },
             raw_material:{
                 rawId:"",
@@ -187,7 +189,9 @@ class PopupWindow extends Component{
                 quantity:"",
                 price:"",
                 type:"",
-                raw_material:""
+                raw_material:"",
+                reorderLevel:"",
+                reorderQty:""
             }
         }
         this.btnSubmit = this.btnSubmit.bind(this);
@@ -291,12 +295,12 @@ class PopupWindow extends Component{
         fieldsKeys.forEach(key=>{
             console.log(key);
             if(fields[key]===""){
-                errors[key] = "Required *";
-                formCompleteStatus = false;
-            }else if(fields[key]==="0"){
-                errors[key] = "Value must be positive *";
-                formCompleteStatus = false;
-            }else if(key==="raw_material" && fields[key].length===0){
+                if(fields.type==="Stock Accessory" && (key==="reorderLevel" || key==="reorderQty")){
+                    errors[key] = "Required *";
+                    formCompleteStatus = false;
+                }
+                
+            }else if(fields.type==="Bicycle" && key==="raw_material" && fields[key].length===0){
                 errors[key] = "Required *";
                 formCompleteStatus = false;
             }else{
@@ -313,6 +317,19 @@ class PopupWindow extends Component{
             if(this.state.windowStatus==="add"){
                 fields.price = parseFloat(fields.price);
                 fields.quantity = parseInt(fields.quantity);
+
+                if(fields.type==="Bicycle"){
+                    delete fields.reorderLevel;
+                    delete fields.reorderQty;
+                    let raw_materials = fields.raw_material;
+                    raw_materials.forEach(raw_material=>{
+                        raw_material.quantity = parseInt(raw_material.quantity);
+                    })
+                }else{
+                    delete fields.raw_material;
+                    fields.reorderLevel = parseInt(fields.reorderLeve);
+                    fields.reorderQty = parseInt(fields.reorderQty);
+                }
                 axios.post(BASE_URL+"/product/newProduct",fields)
                 .then(function(res){
                     console.log(res);
@@ -407,6 +424,7 @@ class PopupWindow extends Component{
                     if(exist_raw_id===-1){
                         const data ={
                             id:id,
+                            name:name,
                             quantity:material.rawQty
                         }
                         fields.raw_material.push(data);
@@ -452,13 +470,13 @@ class PopupWindow extends Component{
         let header;
         let footer;
         if(this.state.windowStatus=="add"){
-            header = "New Raw Material";
+            header = "New Product";
             footer = "Submit";
         }else if(this.state.windowStatus=="delete"){
-            header = "Delete Raw Material";
+            header = "Delete Product";
             footer = "Delete";
         }else if(this.state.windowStatus=="update"){
-            header = "Update Raw Material";
+            header = "Update Product";
             footer = "Update";
         }
         console.log(this.state.rawMaterialList);
@@ -552,7 +570,15 @@ class PopupWindow extends Component{
                                                     }
                                                 </div>
                                             ):(
-                                                ""
+                                                <div>
+                                                    <h6>Re-Order Level</h6>
+                                                    <input className="w-100 my-2" type="number" onChange={this.handleChange.bind(this, "reorderLevel")} onKeyDown={this.keyDownClick.bind(this,"reorderLevel")} ref="reorderLevel" value={this.state.fields["reorderLevel"]}/>
+                                                    <h6 className="text-danger">{this.state.errors["reorderLevel"]!==""?(this.state.errors["reorderLevel"]):("")}</h6>
+
+                                                    <h6>Re-Order Quantity</h6>
+                                                    <input className="w-100 my-2" type="number" onChange={this.handleChange.bind(this, "reorderQty")} onKeyDown={this.keyDownClick.bind(this,"reorderQty")} ref="reorderQty" value={this.state.fields["reorderQty"]}/>
+                                                    <h6 className="text-danger">{this.state.errors["reorderQty"]!==""?(this.state.errors["reorderQty"]):("")}</h6>
+                                                </div>
                                             )
                                         }
                                         
