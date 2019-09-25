@@ -167,7 +167,7 @@ async function enquiryProductsList(db, data, callback,reserveStatus) {
     let promises = [];
     products.forEach(async prod=>{
         const promise = new Promise(resolve=>{
-            db.collection("Product").doc(prod.product_id.toString()).get()
+            db.collection("Product").doc(prod.prodId.toString()).get()
             .then(async prodSnapshot=>{
                 if(!prodSnapshot.exists){
                     console.log("Product details not found!");
@@ -186,17 +186,17 @@ async function enquiryProductsList(db, data, callback,reserveStatus) {
                         }
                     }else{
                         if(reserveStatus==="Reserve" && !prod.status){
-                            if(product.quantity>=prod.quantity){
-                                const decrement = FIRESTORE.FieldValue.increment(-prod.quantity);
-                                db.collection("Product").doc(prod.product_id.toString()).update({quantity:decrement});
+                            if(product.quantity>=prod.qty){
+                                const decrement = FIRESTORE.FieldValue.increment(-prod.qty);
+                                db.collection("Product").doc(prod.prodId.toString()).update({quantity:decrement});
                                 prod.status = true;
                             }else{
                                 prod.status = false;
                             }
                         }
                         else if(reserveStatus==="ReStock" && prod.status){
-                            const increment = FIRESTORE.FieldValue.increment(prod.quantity);
-                            db.collection("Product").doc(prod.product_id.toString()).update({quantity:increment});
+                            const increment = FIRESTORE.FieldValue.increment(prod.qty);
+                            db.collection("Product").doc(prod.prodId.toString()).update({quantity:increment});
                             delete prod.status;
                         }
                         return resolve([false,prod,200]);
@@ -225,7 +225,7 @@ async function enquiryProductsList(db, data, callback,reserveStatus) {
                     return callback(error,info,status);
                 }else{
                     
-                    if(info.product_id===prod.product_id){
+                    if(info.product_id===prod.prodId){
                         prod = info;
                     }
                 }
@@ -250,7 +250,7 @@ async function updateMaterialQty(db,mainProduct,product,prodCallback,reserveStat
                     console.log("Reserve materials raw material details not Found!");
                      return [true,"Reserve materials raw material details not Found!",404];
                 }else{
-                    const totalQty = raw_material.quantity * product.quantity;
+                    const totalQty = raw_material.quantity * product.qty;
                     if(reserveStatus==="Reserve"){
                         if(doc.data().quantity>=totalQty){
                             const decrement = FIRESTORE.FieldValue.increment(-totalQty);
@@ -366,7 +366,3 @@ exports.updateEnquiry = function(req,res,db,firestore){
         res.status(500).send(JSON.stringify({message:"Enquiry search error!"}));
     });
 }
-
-
-
-

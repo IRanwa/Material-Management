@@ -43,6 +43,7 @@ class Enquiries extends Component{
     }
 
     render(){
+        console.log(this.state.tableData)
         return(
             <div className="card w-90 p-3 m-5">
                 {
@@ -64,21 +65,22 @@ class Enquiries extends Component{
                                     <th>Order Id</th>
                                     <th>Place Date</th>
                                     <th>Modify Date</th>
-                                    <th>Products Required</th>
+                                    {/* <th>Products Required</th> */}
                                     <th>Status</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {
+                                    
                                     this.state.tableData.map(data=>{
                                         return (
                                             <tr key={data.enquiry_id}>
-                                                <td>{data.order_id}</td>
                                                 <td>{data.enquiry_id}</td>
+                                                <td>{data.order_id}</td>
                                                 <td>{data.place_date}</td>
                                                 <td>{data.modify_date}</td>
-                                                <td>
+                                                {/* <td>
                                                     <ul>
                                                         {
                                                             data.products.map((prod,index)=>{
@@ -91,7 +93,7 @@ class Enquiries extends Component{
                                                             })
                                                         }
                                                     </ul>
-                                                </td>
+                                                </td> */}
                                                 <td>{data.status}</td>
                                                 <td>
                                                     <input type="submit" className="btn-sm btn-success" value="View Details" onClick={()=>this.viewDetails(data.enquiry_id)}/>

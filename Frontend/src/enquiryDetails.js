@@ -94,12 +94,15 @@ class EnquiryDetails extends Component{
                             {
                                 enquiry.products!==undefined && enquiry.products.map(prod=>{
                                     return(
-                                        <div className="row">
+                                        <div className="row" key={prod.prodId}>
                                             <div className="col">
-                                                Product Id : {prod.product_id}
+                                                Product Id : {prod.prodId}
                                             </div>
                                             <div className="col">
-                                                Product Quantity : {prod.quantity}
+                                                Product Name : {prod.prodName}
+                                            </div>
+                                            <div className="col">
+                                                Product Quantity : {prod.qty}
                                             </div>
                                             {
                                                 prod.status!==undefined?(

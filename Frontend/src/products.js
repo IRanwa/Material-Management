@@ -113,6 +113,8 @@ class Products extends Component{
                                     <th>Name</th>
                                     <th>Description</th>
                                     <th>Quantity</th>
+                                    <th>Re-Order Qty</th>
+                                    <th>Status</th>
                                     <th>Price</th>
                                     <th>Type</th>
                                     {/* <th>Raw Material Qty Required</th> */}
@@ -123,11 +125,25 @@ class Products extends Component{
                                 {
                                     this.state.tableData.map(data=>{
                                         console.log(data)
+                                        let stockStatus = "Available";
+                                        if(data.quantity<data.reorderLevel){
+                                            stockStatus = "Low on stock";
+                                        }
                                         return (
                                             <tr key={data.product_id}>
                                                 <td>{data.name}</td>
                                                 <td>{data.description}</td>
                                                 <td>{data.quantity}</td>
+                                                <td>{data.reorderQty}</td>
+                                                <td>
+                                                     {
+                                                        stockStatus==="Available"?(
+                                                            <label>{stockStatus}</label>
+                                                        ):(
+                                                            <h6 className="text-danger font-weight-bold">{stockStatus}</h6>
+                                                        )
+                                                    }
+                                                </td>
                                                 <td>{data.price}</td>
                                                 <td>{data.type}</td>
                                                 {/* <td>

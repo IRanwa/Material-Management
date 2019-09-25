@@ -117,13 +117,17 @@ class RawMaterials extends Component{
                                     <th>Quantity</th>
                                     <th>Re-Order Level</th>
                                     <th>Re-Order Qty</th>
+                                    <th>Stock Status</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {
                                     this.state.tableData.map(data=>{
-                                        console.log(data)
+                                        let stockStatus = "Available";
+                                        if(data.quantity<data.reorderLevel){
+                                            stockStatus = "Low on stock";
+                                        }
                                         return (
                                             <tr key={data.raw_material_id}>
                                                 <td>{data.name}</td>
@@ -131,6 +135,15 @@ class RawMaterials extends Component{
                                                 <td>{data.quantity}</td>
                                                 <td>{data.reorderLevel}</td>
                                                 <td>{data.reorderQty}</td>
+                                                <td>
+                                                    {
+                                                        stockStatus==="Available"?(
+                                                            <label>{stockStatus}</label>
+                                                        ):(
+                                                            <h6 className="text-danger font-weight-bold">{stockStatus}</h6>
+                                                        )
+                                                    }
+                                                </td>
                                                 <td>
                                                     <button className="btn btn-sm btn-update w-50 my-1 mr-1" onClick={()=>this.statusChange("update",data.raw_material_id)}>Update</button>
                                                     <button className="btn btn-sm btn-delete w-50 my-1 mr-1" onClick={()=>this.statusChange("delete",data.raw_material_id)}>Delete</button>
