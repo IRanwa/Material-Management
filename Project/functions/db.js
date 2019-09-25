@@ -2,6 +2,8 @@ const Supplier = require("./DB/Supplier");
 const RawMaterial = require("./DB/RawMaterial");
 const Product = require("./DB/Product");
 const Enquiry = require("./DB/Enquiries");
+const Requisition = require('./DB/Requisition');
+const Bom = require('./DB/BOM');
 
 
 //Supplier DB [Start]
@@ -27,6 +29,10 @@ exports.deleteSupplier = function(req,res,db){
 
 exports.addStockItem = function(req,res,db){
     Supplier.addStockItem(req,res,db);
+}
+
+exports.getSupplierByStockItem = function(req,res,db){
+    Supplier.getSupplierByStockItem(req,res,db);
 }
 //Supplier DB [End]
 
@@ -103,3 +109,15 @@ exports.updateEnquiry = function(req,res,db,firestore){
     Enquiry.updateEnquiry(req,res,db,firestore);
 }
 //Enquiry DB [End]
+
+//Purchase Requisitions [Start]
+exports.newRequisition = function(req,res,db){
+    Requisition.newRequisition(req,res,db);
+}
+//Purchase Requisitions [End]
+
+//BOM [Start]
+exports.newBOM = function(req,res,db){
+    Bom.newBOM(req,res,db);
+}
+//BOM [End]

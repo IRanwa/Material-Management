@@ -241,3 +241,34 @@ exports.addStockItem = function(req,res,db){
         res.status(500).send(JSON.stringify({message:"Supplier search error!"}));
     })
 }
+
+exports.getSupplierByStockItem = function(req,res,db){
+    const id = req.query.id;
+    const type = req.query.type;
+    console.log(id);
+    db.collection("Suppliers").get()
+    .then(docsList=>{
+        let suppliers = [];
+        docsList.forEach(doc=>{
+            const data = doc.data();
+            console.log("data ",data);
+            const stockItems = data.stockItems;
+            stockItems.forEach(item=>{
+                console.log("item ",item);
+                if(type==="Raw Material" && item.raw_material_id===parseInt(id)){
+                    console.log("item ",item);
+                    suppliers.push(data);
+                }else if(type==="Stock Accessories" && item.product_id===parseInt(id)){
+                    console.log("item ",item);
+                    suppliers.push(data);
+                }
+            })
+        })
+        console.log("end");
+        res.status(200).send(JSON.stringify({suppliers}));
+        return null;
+    }).catch(error=>{
+        console.log(error);
+        res.status(500).send(JSON.stringify({message:"Supplier details search error!"}));
+    })
+}

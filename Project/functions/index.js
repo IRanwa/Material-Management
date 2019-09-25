@@ -12,12 +12,16 @@ const supplier = express();
 const rawmaterials = express();
 const product = express();
 const enquiry = express();
+const requisition = express();
+const bom = express();
 
 // Automatically allow cross-origin requests
 supplier.use(cors({ origin: true }));
 rawmaterials.use(cors({origin:true}));
 product.use(cors({origin:true}));
 enquiry.use(cors({origin:true}));
+requisition.use(cors({origin:true}));
+bom.use(cors({origin:true}));
 
 
 //Supplier APIs
@@ -45,6 +49,9 @@ supplier.post('/addStockItem',(req,res)=>{
     DB.addStockItem(req,res,db);
 });
 
+supplier.get("/getSupplierByStockItem",(req,res)=>{
+    DB.getSupplierByStockItem(req,res,db);
+})
 //Raw Material APIs
 rawmaterials.post('/newRawMaterial',(req,res)=>{
     DB.newRawMaterial(req,res,db);
@@ -116,7 +123,19 @@ enquiry.put('/updateEnquiry',(req,res)=>{
     DB.updateEnquiry(req,res,db,firestore);
 });
 
+//Purchase Requisition
+requisition.post('/newRequisition',(req,res)=>{
+    DB.newRequisition(req,res,db);
+});
+
+//BOM
+bom.post('/newBOM',(req,res)=>{
+    DB.newBOM(req,res,db);
+});
+
 exports.supplier = functions.https.onRequest(supplier);
 exports.rawmaterials = functions.https.onRequest(rawmaterials);
 exports.product = functions.https.onRequest(product);
 exports.enquiry = functions.https.onRequest(enquiry);
+exports.requisition = functions.https.onRequest(requisition);
+exports.bom = functions.https.onRequest(bom);

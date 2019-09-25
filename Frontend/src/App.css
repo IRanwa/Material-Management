@@ -257,6 +257,16 @@ input[type='email'], input[type='password'] {
   
 }
 
+.category-table {
+  display:inline-table
+}
+
+@media (max-width: 768px){
+  .category-table {
+    display:block
+  }
+}
+
 .category-table td{
   border:1px solid white;
   border-bottom: 2px solid white;

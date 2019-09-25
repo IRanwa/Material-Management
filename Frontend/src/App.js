@@ -9,6 +9,8 @@ import Enquiries from './enquiries';
 import EnquiryDetails from './enquiryDetails';
 import Homepage from './homepage';
 import SupplierDetails from './supplierDetails';
+import Requisitions from './requisitions';
+import NewRequisitions from './newRequisition';
 
 
 class App extends Component {
@@ -24,6 +26,8 @@ class App extends Component {
           <Route path="/products" component={ProductsPage} />
           <Route path="/enquiries" component={EnquiriesPage} />
           <Route path="/enquiryDetails" component={EnquiryDetailsPage} />
+          <Route path="/requisitions" component={RequisitionsPage} />
+          <Route path="/newRequisition" component={NewRequisitionsPage} />
         </div>
       </Router>
     );
@@ -197,6 +201,28 @@ class ProductsPage extends Component{
   }
 }
 
+class RequisitionsPage extends Component{
+  render(){
+    return(
+      <div>
+        <NavBar/>
+        <Requisitions/>
+      </div>
+    )
+  }
+}
+
+class NewRequisitionsPage extends Component{
+  render(){
+    return(
+      <div>
+        <NavBar/>
+        <NewRequisitions/>
+      </div>
+    )
+  }
+}
+
 class NavBar extends Component{
   constructor(props){
     super(props);
@@ -240,6 +266,7 @@ class NavBar extends Component{
                   </div>
                 </div>
                 <a className="nav-item nav-link nav-sub" href="/enquiries">Enquiries</a>
+                <a className="nav-item nav-link nav-sub" href="/requisitions">Requisitions</a>
               </div>
               
              
