@@ -114,6 +114,14 @@ exports.updateEnquiry = function(req,res,db,firestore){
 exports.newRequisition = function(req,res,db){
     Requisition.newRequisition(req,res,db);
 }
+
+exports.getRequisitionsList = function(req,res,db){
+    Requisition.getRequisitionsList(req,res,db);
+}
+
+exports.getRequisition = function(req,res,db){
+    Requisition.getRequisition(req,res,db);
+}
 //Purchase Requisitions [End]
 
 //BOM [Start]

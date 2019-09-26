@@ -11,6 +11,7 @@ import Homepage from './homepage';
 import SupplierDetails from './supplierDetails';
 import Requisitions from './requisitions';
 import NewRequisitions from './newRequisition';
+import RequisitionDetails from './requisitionDetails';
 
 
 class App extends Component {
@@ -28,6 +29,7 @@ class App extends Component {
           <Route path="/enquiryDetails" component={EnquiryDetailsPage} />
           <Route path="/requisitions" component={RequisitionsPage} />
           <Route path="/newRequisition" component={NewRequisitionsPage} />
+          <Route path="/viewRequisition" component={RequisitonDetailsPage} />
         </div>
       </Router>
     );
@@ -218,6 +220,31 @@ class NewRequisitionsPage extends Component{
       <div>
         <NavBar/>
         <NewRequisitions/>
+      </div>
+    )
+  }
+}
+
+class RequisitonDetailsPage extends Component{
+  constructor(props){
+    super(props);
+    console.log(props.location.state)
+    
+    if(props.location.state!==undefined){
+      this.state={
+        id:props.location.state.id
+      }
+    }else{
+      this.state={
+        id:0
+      }
+    }
+  }
+  render(){
+    return(
+      <div>
+        <NavBar/>
+        <RequisitionDetails id={this.state.id}/>
       </div>
     )
   }

@@ -241,10 +241,29 @@ class NewRequisitions extends Component{
             delete requisition.stockItem;
         })
 
+        const that = this;
         axios.post(BASE_URL+"/requisition/newRequisition",{requisitionItems:requisitionItems})
         .then(function(res){
             console.log(res);
             alert(res.data.message);
+            that.setState({
+                fields:{
+                    type:"",
+                    stockItem:"",
+                    supplier:"",
+                    quantity:""
+                },
+                stockItems:[],
+                suppliers:[],
+                supplierItem:"",
+                errors:{
+                    type:"",
+                    stockItem:"",
+                    supplier:"",
+                    quantity:""
+                },
+                requisitionItems:[]
+            })
         }).catch(function(error){
             console.log(error);
             if(error.response!==undefined && error.response.data!==null){

@@ -128,6 +128,14 @@ requisition.post('/newRequisition',(req,res)=>{
     DB.newRequisition(req,res,db);
 });
 
+requisition.get('/getRequisitionsList',(req,res)=>{
+    DB.getRequisitionsList(req,res,db);
+});
+
+requisition.get('/getRequisition',(req,res)=>{
+    DB.getRequisition(req,res,db);
+});
+
 //BOM
 bom.post('/newBOM',(req,res)=>{
     DB.newBOM(req,res,db);

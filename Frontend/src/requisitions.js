@@ -12,10 +12,29 @@ class Requisitions extends Component{
             tableData:[],
             popupStatus:"",
             addStatus:false,
-            popupId:0
+            popupId:0,
+            viewDetails:false
         }
         this.modalClose = this.modalClose.bind(this);
         this.statusChange = this.statusChange.bind(this);
+    }
+
+    componentDidMount(){
+        const that = this;
+        axios.get(BASE_URL+"/requisition/getRequisitionsList")
+        .then(function(res){
+            console.log(res.data)
+            that.setState({
+                tableData:res.data.requisitions
+            })
+        }).catch(function(error){
+            console.log(error);
+            if(error.response!==undefined && error.response.data!==null){
+                alert(error.response.data.message);
+            }else{
+                alert("Requisition searching error!");
+            }
+        })
     }
 
     modalClose(){
@@ -31,10 +50,15 @@ class Requisitions extends Component{
         }
     }
 
-    statusChange(status){
+    statusChange(status,id){
         if(status==="add"){
             this.setState({
                 addStatus:true
+            })
+        }else if(status==="view"){
+            this.setState({
+                viewDetails:true,
+                popupId:id
             })
         }else{
             this.setState({
@@ -54,6 +78,13 @@ class Requisitions extends Component{
                         ""
                     )
                 }
+                {
+                    this.state.viewDetails?(
+                        <Redirect to={{pathname:"/viewRequisition",state:{id:this.state.popupId}}}/>
+                    ):(
+                        ""
+                    )
+                }
                 <div className="w-100 container text-center category-menu">
                     <div className="row mt-2 text-center">
                         <h5 className="w-100 m-0">
@@ -69,56 +100,25 @@ class Requisitions extends Component{
                         <table className="table category-table ">
                             <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Description</th>
-                                    <th>Quantity</th>
-                                    <th>Re-Order Qty</th>
+                                    <th>Id</th>
+                                    <th>Created Date</th>
+                                    <th>No of Items</th>
                                     <th>Status</th>
-                                    <th>Price</th>
-                                    <th>Type</th>
-                                    {/* <th>Raw Material Qty Required</th> */}
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {
-                                    this.state.tableData.map(data=>{
+                                    this.state.tableData.map((data,index)=>{
                                         console.log(data)
-                                        const stockStatus="";
                                         return (
-                                            <tr key={data.product_id}>
-                                                <td>{data.name}</td>
-                                                <td>{data.description}</td>
-                                                <td>{data.quantity}</td>
-                                                <td>{data.reorderQty}</td>
+                                            <tr key={index}>
+                                                <td>{data.requisition_id}</td>
+                                                <td>{data.place_date}</td>
+                                                <td>{data.requisitionItems.length}</td>
+                                                <td>{data.status}</td>
                                                 <td>
-                                                     {
-                                                        stockStatus==="Available"?(
-                                                            <label>{stockStatus}</label>
-                                                        ):(
-                                                            <h6 className="text-danger font-weight-bold">{stockStatus}</h6>
-                                                        )
-                                                    }
-                                                </td>
-                                                <td>{data.price}</td>
-                                                <td>{data.type}</td>
-                                                {/* <td>
-                                                    <ul>
-                                                    {
-                                                        data.raw_material.map((raw_material,index)=>{
-                                                            return(
-                                                                <li key={index}>
-                                                                    <div>Name : {raw_material.name}</div>
-                                                                    <div>Qty : {raw_material.quantity}</div>
-                                                                </li>
-                                                            );
-                                                        })
-                                                    }
-                                                    </ul>
-                                                </td> */}
-                                                <td>
-                                                    <button className="btn btn-sm btn-update w-50 my-1 mr-1" onClick={()=>this.statusChange("update",data.product_id)}>Update</button>
-                                                    <button className="btn btn-sm btn-delete w-50 my-1 mr-1" onClick={()=>this.statusChange("delete",data.product_id)}>Delete</button>
+                                                    <button className="btn btn-sm btn-success w-50 my-1 mr-1" onClick={()=>this.statusChange("view",data.requisition_id)}>View Details</button>
                                                 </td>
                                             </tr>
                                         );
