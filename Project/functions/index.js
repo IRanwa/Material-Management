@@ -141,6 +141,14 @@ bom.post('/newBOM',(req,res)=>{
     DB.newBOM(req,res,db);
 });
 
+bom.get('/getBOMList',(req,res)=>{
+    DB.getBOMList(req,res,db);
+});
+
+bom.get('/getBOM',(req,res)=>{
+    DB.getBOM(req,res,db);
+});
+
 exports.supplier = functions.https.onRequest(supplier);
 exports.rawmaterials = functions.https.onRequest(rawmaterials);
 exports.product = functions.https.onRequest(product);

@@ -128,4 +128,12 @@ exports.getRequisition = function(req,res,db){
 exports.newBOM = function(req,res,db){
     Bom.newBOM(req,res,db);
 }
+
+exports.getBOMList = function(req,res,db){
+    Bom.getBOMList(req,res,db);
+}
+
+exports.getBOM = function(req,res,db){
+    Bom.getBOM(req,res,db);
+}
 //BOM [End]
