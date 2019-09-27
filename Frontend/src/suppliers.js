@@ -164,9 +164,9 @@ class PopupWindow extends Component{
             windowStatus:props.windowStatus,
             id:0,
             fields: {
-                username:"",
-                pass:"",
-                conpass:"",
+                // username:"",
+                // pass:"",
+                // conpass:"",
                 name:"",
                 businessName:"",
                 contactDetails:[],
@@ -181,9 +181,9 @@ class PopupWindow extends Component{
                 emailAddress:""
             },
             errors:{
-                username:"",
-                pass:"",
-                conpass:"",
+                // username:"",
+                // pass:"",
+                // conpass:"",
                 name:"",
                 businessName:""
             }
@@ -208,19 +208,19 @@ class PopupWindow extends Component{
         }else{
             let fields = this.state.fields;
 
-            if(field==="conpass"){
-                if(e.target.value!=="" && e.target.value!==fields["pass"]){
-                    errors["conpass"] = "Password not matched";
-                }else{
-                    errors["conpass"] = "";
-                }
-            }else if(field==="pass"){
-                if(e.target.value!=="" && e.target.value!==fields["conpass"]){
-                    errors["conpass"] = "Password not matched";
-                }else{
-                    errors["conpass"] = "";
-                }
-            }
+            // if(field==="conpass"){
+            //     if(e.target.value!=="" && e.target.value!==fields["pass"]){
+            //         errors["conpass"] = "Password not matched";
+            //     }else{
+            //         errors["conpass"] = "";
+            //     }
+            // }else if(field==="pass"){
+            //     if(e.target.value!=="" && e.target.value!==fields["conpass"]){
+            //         errors["conpass"] = "Password not matched";
+            //     }else{
+            //         errors["conpass"] = "";
+            //     }
+            // }
             fields[field] = e.target.value;        
             this.setState({fields,errors});
         }
@@ -262,13 +262,13 @@ class PopupWindow extends Component{
         const errorsKeys = Object.keys(this.state.errors);
         
         let formCompleteStatus = true;
-        if(this.state.windowStatus==="add"){
-            errorsKeys.forEach(key=>{
-                if(key==="conpass" && errors[key]!==""){
-                    formCompleteStatus = false;
-                }
-            });
-        }
+        // if(this.state.windowStatus==="add"){
+        //     errorsKeys.forEach(key=>{
+        //         if(key==="conpass" && errors[key]!==""){
+        //             formCompleteStatus = false;
+        //         }
+        //     });
+        // }
         if(!formCompleteStatus){
             console.log("Please fill the empty fields!");
             alert("Please fill the empty fields!");
@@ -290,7 +290,7 @@ class PopupWindow extends Component{
                 })
             }else{
                 fields.userRole = "supplier";
-                delete fields["conpass"];
+                // delete fields["conpass"];
                 if(this.state.windowStatus==="add"){
                     axios.post(BASE_URL+"/supplier/registerSupplier",this.state.fields)
                     .then(function(res){
@@ -343,9 +343,9 @@ class PopupWindow extends Component{
     btnReset(){
         this.setState({
             fields: {
-                username:"",
-                pass:"",
-                conpass:"",
+                // username:"",
+                // pass:"",
+                // conpass:"",
                 name:"",
                 businessName:"",
                 contactDetails:[],
@@ -360,9 +360,9 @@ class PopupWindow extends Component{
                 emailAddress:""
             },
             errors:{
-                username:"",
-                pass:"",
-                conpass:"",
+                // username:"",
+                // pass:"",
+                // conpass:"",
                 name:"",
                 businessName:""
             }
@@ -426,7 +426,7 @@ class PopupWindow extends Component{
                                 </div>
                             ):(
                                 <div>
-                                    {
+                                    {/* {
                                         this.state.windowStatus==="add"?(
                                             <div>
                                                 <h6>Username</h6>
@@ -444,7 +444,7 @@ class PopupWindow extends Component{
                                         ):(
                                             ""
                                         )
-                                    }
+                                    } */}
                                         <h6>Supplier Name</h6>
                                         <input className="w-100 my-2" type="text" onChange={this.handleChange.bind(this, "name")} ref="name" value={this.state.fields["name"]}/>
                                         <h6 className="text-danger">{this.state.errors["name"]!==""?(this.state.errors["name"]):("")}</h6>

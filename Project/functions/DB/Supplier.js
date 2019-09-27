@@ -1,54 +1,48 @@
-const LOGIN = require('./Login');
 const SUPPLIER_DEFAULT = 0;
 
 //Register Supplier
 exports.regSupplier = function(req,res,db){
     let setData = req.body;
-    const loginCallback = function(callback_error,results){
-        if(callback_error===null){
-            //Find last record
-            db.collection("Suppliers").orderBy("supplierId","desc").limit(1).get()
-            .then(docsList=>{
-                //If no records found save with default id
-                if(docsList.docs.length===0){
+        //Find last record
+        db.collection("Suppliers").orderBy("supplierId","desc").limit(1).get()
+        .then(docsList=>{
+            //If no records found save with default id
+            if(docsList.docs.length===0){
+                try{
+                    const docRef = db.collection("Suppliers").doc(SUPPLIER_DEFAULT.toString());
+                    setData.supplierId = SUPPLIER_DEFAULT;
+                    docRef.set(setData);
+                    console.log("Register Supplier -> New Supplier Saved!");
+                    res.status(200).send(JSON.stringify({message:"New supplier saved successfully!"}));
+                }catch(error){
+                    console.log(error)
+                    console.log("Register Supplier -> New Supplier Save Un-Successful!");
+                    res.status(500).send(JSON.stringify({message:"Saving new supplier un-successful!"}));
+                }
+            }else{
+                //Go through first record and generate new id and save
+                docsList.forEach(doc=>{
+                    const newSupplierId = doc.data().supplierId+1;
+                    console.log("Register Supplier -> New Supplier Id Generated!");
                     try{
-                        const docRef = db.collection("Suppliers").doc(SUPPLIER_DEFAULT.toString());
-                        setData.supplierId = SUPPLIER_DEFAULT;
+                        const docRef = db.collection("Suppliers").doc(newSupplierId.toString());
+                        setData.supplierId = newSupplierId;
                         docRef.set(setData);
                         console.log("Register Supplier -> New Supplier Saved!");
                         res.status(200).send(JSON.stringify({message:"New supplier saved successfully!"}));
                     }catch(error){
                         console.log(error)
-                        console.log("Register Supplier -> New Supplier Save Un-Successful!");
+                        console.log("Saving new supplier un-successful!");
                         res.status(500).send(JSON.stringify({message:"Saving new supplier un-successful!"}));
                     }
-                }else{
-                    //Go through first record and generate new id and save
-                    docsList.forEach(doc=>{
-                        const newSupplierId = doc.data().supplierId+1;
-                        console.log("Register Supplier -> New Supplier Id Generated!");
-                        try{
-                            const docRef = db.collection("Suppliers").doc(newSupplierId.toString());
-                            setData.supplierId = newSupplierId;
-                            docRef.set(setData);
-                            console.log("Register Supplier -> New Supplier Saved!");
-                            res.status(200).send(JSON.stringify({message:"New supplier saved successfully!"}));
-                        }catch(error){
-                            console.log(error)
-                            console.log("Saving new supplier un-successful!");
-                            res.status(500).send(JSON.stringify({message:"Saving new supplier un-successful!"}));
-                        }
-                    });
-                }
-                return null;
-            }).catch(error=>{
-                console.log(error);
-                console.log("Register Supplier -> Searching last supplier record error!");
-                res.status(500).send(JSON.stringify({message:"Searching last supplier record error!"}));
-            });
-        }
-    }
-    LOGIN.regLogin(res,setData,db,loginCallback);
+                });
+            }
+            return null;
+        }).catch(error=>{
+            console.log(error);
+            console.log("Register Supplier -> Searching last supplier record error!");
+            res.status(500).send(JSON.stringify({message:"Searching last supplier record error!"}));
+        });
 };
 
 //Get Supplier List
@@ -76,68 +70,70 @@ exports.getSupplier = function(req,res,db){
     const supplierId = parseInt(query.supplierId);
     console.log("suplier id : ",supplierId);
     console.log(typeof supplierId);
-    db.collection("Suppliers").where("supplierId","==",supplierId).get()
-    .then(docList=>{
-        if(docList.docs.length!==0){
-            docList.forEach(doc=>{
-                let data = doc.data();
+    db.collection("Suppliers").doc(supplierId.toString()).get()
+    .then(docSnapshot=>{
+        if(docSnapshot.exists){
+           // docList.forEach(doc=>{
+                let data = docSnapshot.data();
                 let stockItems = data.stockItems;
                 let count=0;
-                stockItems.forEach(async item=>{
-                    count++;
-                    if(item.type==="Raw Material"){
-                        const docRef = db.collection("RawMaterials").doc(item.raw_material_id.toString());
-                        const transaction = db.runTransaction(T=>{
-                            return T.get(docRef)
-                            .then(docSnapshot=>{
-                                if(!docSnapshot.exists){
-                                    console.log("Raw material not found!");
-                                    return null;
-                                }else{
-                                    return docSnapshot.data();
+                if(stockItems!==undefined){
+                    stockItems.forEach(async item=>{
+                        count++;
+                        if(item.type==="Raw Material"){
+                            const docRef = db.collection("RawMaterials").doc(item.raw_material_id.toString());
+                            const transaction = db.runTransaction(T=>{
+                                return T.get(docRef)
+                                .then(docSnapshot=>{
+                                    if(!docSnapshot.exists){
+                                        console.log("Raw material not found!");
+                                        return null;
+                                    }else{
+                                        return docSnapshot.data();
+                                    }
+                                }).catch(error=>{
+                                    console.log(error);
+                                    console.log("Raw material search error!");
+                                })
+                            });
+                            await Promise.resolve(transaction).then(result=>{
+                                if(result!==null){
+                                    item.name = result.name;
                                 }
-                            }).catch(error=>{
-                                console.log(error);
-                                console.log("Raw material search error!");
-                            })
-                        });
-                        await Promise.resolve(transaction).then(result=>{
-                            if(result!==null){
-                                item.name = result.name;
-                            }
-                            return null;
-                        });
-                    }else{
-                        const docRef = db.collection("Product").doc(item.product_id.toString());
-                        const transaction = db.runTransaction(T=>{
-                            return T.get(docRef)
-                            .then(docSnapshot=>{
-                                if(!docSnapshot.exists){
-                                    console.log("Product not found!");
-                                    return null;
-                                }else{
-                                    return docSnapshot.data();
+                                return null;
+                            });
+                        }else{
+                            const docRef = db.collection("Product").doc(item.product_id.toString());
+                            const transaction = db.runTransaction(T=>{
+                                return T.get(docRef)
+                                .then(docSnapshot=>{
+                                    if(!docSnapshot.exists){
+                                        console.log("Product not found!");
+                                        return null;
+                                    }else{
+                                        return docSnapshot.data();
+                                    }
+                                }).catch(error=>{
+                                    console.log(error);
+                                    console.log("Product search error!");
+                                })
+                            });
+                            await Promise.resolve(transaction).then(result=>{
+                                if(result!==null){
+                                    item.name = result.name;
                                 }
-                            }).catch(error=>{
-                                console.log(error);
-                                console.log("Product search error!");
-                            })
-                        });
-                        await Promise.resolve(transaction).then(result=>{
-                            if(result!==null){
-                                item.name = result.name;
-                            }
-                            return null;
-                        });
-                    }
-                    count--;
-                    if(count===0){
-                        res.status(200).send(JSON.stringify(data));
-                    }
-                });
-                
-                
-            })
+                                return null;
+                            });
+                        }
+                        count--;
+                        if(count===0){
+                            res.status(200).send(JSON.stringify(data));
+                        }
+                    });
+                }else{
+                    res.status(200).send(JSON.stringify(data));
+                }
+           // })
         }else{
             console.log("Supplier details not found!");
             res.status(404).send(JSON.stringify({message:"Supplier details not found!"}));
@@ -253,16 +249,18 @@ exports.getSupplierByStockItem = function(req,res,db){
             const data = doc.data();
             console.log("data ",data);
             const stockItems = data.stockItems;
-            stockItems.forEach(item=>{
-                console.log("item ",item);
-                if(type==="Raw Material" && item.raw_material_id===parseInt(id)){
+            if(stockItems!==undefined){
+                stockItems.forEach(item=>{
                     console.log("item ",item);
-                    suppliers.push(data);
-                }else if(type==="Stock Accessories" && item.product_id===parseInt(id)){
-                    console.log("item ",item);
-                    suppliers.push(data);
-                }
-            })
+                    if(type==="Raw Material" && item.raw_material_id===parseInt(id)){
+                        console.log("item ",item);
+                        suppliers.push(data);
+                    }else if(type==="Stock Accessories" && item.product_id===parseInt(id)){
+                        console.log("item ",item);
+                        suppliers.push(data);
+                    }
+                });
+            }
         })
         console.log("end");
         res.status(200).send(JSON.stringify({suppliers}));

@@ -5,7 +5,7 @@ import {Redirect} from "react-router-dom";
 const axios = require("axios");
 const BASE_URL = "https://us-central1-material-management-f3b68.cloudfunctions.net";
 
-class BOM extends Component{
+class GRN extends Component{
     constructor(props){
         super(props);
         this.state={
@@ -15,17 +15,18 @@ class BOM extends Component{
 
     componentDidMount(){
         const that = this;
-        axios.get(BASE_URL+"/bom/getBOMList")
+        axios.get(BASE_URL+"/grn/getGRNList")
         .then(function(res){
+            console.log(res.data)
             that.setState({
-                tableData:res.data.boms
+                tableData:res.data.GRNs
             });
         }).catch(function(error){
             console.log(error);
             if(error.response!==undefined && error.response.data!==null){
                 alert(error.response.data.message);
             }else{
-                alert("BOM searching error!");
+                alert("GRN searching error!");
             }
         });
     }
@@ -36,7 +37,7 @@ class BOM extends Component{
                  <div className="w-100 container text-center category-menu">
                     <div className="row mt-2 text-center">
                         <h5 className="w-100 m-0">
-                            Bill of Materials
+                            Goods Received Notice
                         </h5>
                     </div>
                     <div className="row">
@@ -44,9 +45,9 @@ class BOM extends Component{
                             <thead>
                                 <tr>
                                     <th>Id</th>
-                                    <th>Created Date</th>
-                                    <th>No of Items</th>
-                                    <th>Status</th>
+                                    <th>Requisition Id</th>
+                                    <th>No of Raw Materials</th>
+                                    <th>No of Products</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -56,10 +57,10 @@ class BOM extends Component{
                                          console.log(data)
                                         return(
                                             <tr key={index}>
-                                                <td>{data.bom_id}</td>
-                                                <td>2019/09/24</td>
-                                                <td>{data.billItems!==undefined?(data.billItems.length):("")}</td>
-                                                <td>{data.status}</td>
+                                                <td>{data.grn_id}</td>
+                                                <td>{data.requisitonid}</td>
+                                                <td>{data.rawmaterisl.length}</td>
+                                                <td>{data.products.length}</td>
                                                 <td><input type="submit" className="btn-sm btn-success" value="View Details"></input></td>
                                             </tr>
                                         );
@@ -74,4 +75,4 @@ class BOM extends Component{
     }
 }
 
-export default BOM;
+export default GRN;

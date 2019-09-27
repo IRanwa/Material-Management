@@ -36,7 +36,34 @@ class EnquiryDetails extends Component{
         const that = this;
         axios.get(BASE_URL+"/enquiry/reserveStocks?enquiry_id="+this.state.id)
         .then(function(res){
-            console.log(res)
+            const data = res.data.message;
+            const products = data.products;
+            let items = [];
+            products.forEach(prod=>{
+                items.push(
+                    {
+                        id:prod.id,
+                        qty:prod.qty,
+                        status:prod.status
+                    }
+                )
+            });
+
+            const enquiryData = {
+                id:data.order_id,
+                items:items
+            }
+
+            axios.post("http://192.168.1.6:8080/orders/materialManagementOrder",enquiryData)
+            .then(function(res){
+                console.log(res);
+                alert("Sales has been notified");
+            }).catch(function(error){
+                console.log(error);
+                alert("Error occured while informing sales!");
+            })
+
+
             that.setState({
                 enquiry:res.data.message
             })

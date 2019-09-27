@@ -96,9 +96,6 @@ class SupplierDetails extends Component{
                             Supplier Id : {supplier.supplierId}
                         </label>
                         <label className="row m-0">
-                            Username : {supplier.username}
-                        </label>
-                        <label className="row m-0">
                             Name : {supplier.name}
                         </label>
                         <label className="row m-0">

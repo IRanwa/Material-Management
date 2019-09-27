@@ -290,7 +290,7 @@ async function updateMaterialQty(db,mainProduct,product,prodCallback,reserveStat
 //Schedule stock reserve to restock back
 function scheduleStockReserve(db,enquiry){
     const date = new Date();
-    date.setMinutes(date.getMinutes() + 1);
+    date.setDate(date.getDate() + 1);
     console.log(date);
     if(enquiry.status==="Stocks Reserved" || enquiry.status==="Stocks Not Reserved"){
         const my_job = schedule.scheduledJobs[enquiry.enquiry_id.toString()];
@@ -306,7 +306,8 @@ function scheduleStockReserve(db,enquiry){
                     console.log("Enqiry not found in schedule job");
                 }else{
                     console.log(docSnapshot.data().status);
-                    if(docSnapshot.data().status==="Stocks Reserved" || docSnapshot.data().status==="Stocks Not Reserved"){
+                    if(docSnapshot.data().status==="Stocks Reserved" || 
+                    docSnapshot.data().status==="Stocks Not Reserved"){
                         const callback = function(error,result,status){
                             console.log("restock result ",result);
                             if(error){

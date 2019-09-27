@@ -390,7 +390,7 @@ class PopupWindow extends Component{
             window.location.reload();
         }).catch(function(error){
             console.log(error);
-            if(error.response.data!==null){
+            if(error.response!==undefined && error.response.data!==null){
                 alert(error.response.data.message);
             }else{
                 alert("Product deleting error!");

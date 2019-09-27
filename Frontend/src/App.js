@@ -13,6 +13,7 @@ import Requisitions from './requisitions';
 import NewRequisitions from './newRequisition';
 import RequisitionDetails from './requisitionDetails';
 import BOM from './bom';
+import GRN from './grn';
 
 
 class App extends Component {
@@ -32,6 +33,7 @@ class App extends Component {
           <Route path="/newRequisition" component={NewRequisitionsPage} />
           <Route path="/viewRequisition" component={RequisitonDetailsPage} />
           <Route path="/boms" component={BOMPage} />
+          <Route path="/grns" component={GRNPage}/>
         </div>
       </Router>
     );
@@ -263,6 +265,17 @@ class  BOMPage extends Component{
   }
 }
 
+class GRNPage extends Component{
+  render(){
+    return(
+      <div>
+        <NavBar/>
+        <GRN/>
+      </div>
+    )
+  }
+}
+
 class NavBar extends Component{
   constructor(props){
     super(props);
@@ -308,6 +321,7 @@ class NavBar extends Component{
                 <a className="nav-item nav-link nav-sub" href="/enquiries">Enquiries</a>
                 <a className="nav-item nav-link nav-sub" href="/requisitions">Requisitions</a>
                 <a className="nav-item nav-link nav-sub" href="/boms">BOMs</a>
+                <a className="nav-item nav-link nav-sub" href="/grns">GRNs</a>
               </div>
               
              
